@@ -1,6 +1,10 @@
-add_executable(collision_test_command main.cxx)
+add_executable(aabb_test_command
+    main.cxx
+    collision.cxx
+)
 
-target_link_libraries(collision_test_command gmock gtest)
+target_include_directories(aabb_test_command PRIVATE "${CMAKE_SOURCE_DIR}/src")
+target_link_libraries(aabb_test_command gmock gtest)
 
-add_test(NAME collision_test COMMAND collision_test_command)
+add_test(NAME aabb_test COMMAND aabb_test_command)
 
