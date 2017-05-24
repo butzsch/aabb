@@ -1,6 +1,7 @@
 add_executable(aabb_test_command
     main.cxx
     collision.cxx
+    move_collision.cxx
 )
 
 target_include_directories(aabb_test_command PRIVATE "${CMAKE_SOURCE_DIR}/src")

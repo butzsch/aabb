@@ -19,6 +19,20 @@ namespace aabb
         double y;
     };
 
+    constexpr Vector & operator += (Vector & a, Vector const & b)
+    {
+        a.x += b.x;
+        a.y += b.y;
+
+        return a;
+    }
+
+    constexpr Vector operator + (Vector const & a, Vector const & b)
+    {
+        auto summand = a;
+        return summand += b;
+    }
+
     struct Rectangle
     {
         Vector position;
