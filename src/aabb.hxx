@@ -1,6 +1,8 @@
 #ifndef AABB_AABB_HXX_INC
 #define AABB_AABB_HXX_INC
 
+#include <cassert>
+
 namespace
 {
     constexpr bool collide_on_axis(double a_pos, double a_size, double b_pos, double b_size)
@@ -25,6 +27,11 @@ namespace aabb
 
     constexpr bool collide(Rectangle const & a, Rectangle const & b)
     {
+        assert(a.size.x > 0);
+        assert(a.size.y > 0);
+        assert(b.size.x > 0);
+        assert(b.size.y > 0);
+
         return collide_on_axis(a.position.x, a.size.x, b.position.x, b.size.x)
             && collide_on_axis(a.position.y, a.size.y, b.position.y, b.size.y);
     }
