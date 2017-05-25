@@ -3,13 +3,17 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cmath>
 
 #include "Rectangle.hxx"
 #include "Vector.hxx"
 
 namespace
 {
+	constexpr double abs(double x)
+	{
+		return x < 0.0 ? -x : x;
+	}
+
     constexpr bool collide_on_axis(double a_pos, double a_size, double b_pos, double b_size)
     {
         return a_pos < b_pos + b_size && b_pos < a_pos + a_size;
@@ -25,8 +29,8 @@ namespace
         return {
             outer_position,
             aabb::Vector {
-                start.size.x + std::abs(delta_position.x),
-                start.size.y + std::abs(delta_position.y)
+                start.size.x + abs(delta_position.x),
+                start.size.y + abs(delta_position.y)
             }
         };
     }
