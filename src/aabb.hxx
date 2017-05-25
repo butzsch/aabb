@@ -1,7 +1,12 @@
 #ifndef AABB_AABB_HXX_INC
 #define AABB_AABB_HXX_INC
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
+
+#include "Rectangle.hxx"
+#include "Vector.hxx"
 
 namespace
 {
@@ -9,64 +14,26 @@ namespace
     {
         return a_pos < b_pos + b_size && b_pos < a_pos + a_size;
     }
+
+    constexpr aabb::Rectangle get_outer_box(aabb::Rectangle const & start, aabb::Vector const & delta_position)
+    {
+        auto const outer_position = aabb::Vector {
+            start.position.x + std::min(delta_position.x, 0.0),
+            start.position.y + std::min(delta_position.y, 0.0)
+        };
+
+        return {
+            outer_position,
+            aabb::Vector {
+                start.size.x + std::abs(delta_position.x),
+                start.size.y + std::abs(delta_position.y)
+            }
+        };
+    }
 }
 
 namespace aabb
 {
-    struct Vector
-    {
-        double x;
-        double y;
-    };
-
-    constexpr Vector & operator += (Vector & a, Vector const & b)
-    {
-        a.x += b.x;
-        a.y += b.y;
-
-        return a;
-    }
-
-    constexpr Vector operator + (Vector const & a, Vector const & b)
-    {
-        auto summand = a;
-        return summand += b;
-    }
-
-    constexpr Vector & operator -= (Vector & a, Vector const & b)
-    {
-        a.x -= b.x;
-        a.y -= b.y;
-
-        return a;
-    }
-
-    constexpr Vector operator - (Vector const & a, Vector const & b)
-    {
-        auto minuend = a;
-        return minuend -= b;
-    }
-
-    constexpr Vector operator /= (Vector & a, double b)
-    {
-        a.x /= b;
-        a.y /= b;
-
-        return a;
-    }
-
-    constexpr Vector operator / (Vector const & a, double b)
-    {
-        auto dividend = a;
-        return dividend /= b;
-    }
-
-    struct Rectangle
-    {
-        Vector position;
-        Vector size;
-    };
-
     constexpr bool collide(Rectangle const & a, Rectangle const & b)
     {
         assert(a.size.x > 0);
@@ -76,6 +43,16 @@ namespace aabb
 
         return collide_on_axis(a.position.x, a.size.x, b.position.x, b.size.x)
             && collide_on_axis(a.position.y, a.size.y, b.position.y, b.size.y);
+    }
+
+    constexpr bool move_collide(
+        Rectangle const & start,
+        Vector const & delta_position,
+        Rectangle const & obstacle
+    )
+    {
+        auto const outer_box = get_outer_box(start, delta_position);
+        return collide(obstacle, outer_box);
     }
 }
 
