@@ -47,6 +47,20 @@ namespace aabb
         return minuend -= b;
     }
 
+    constexpr Vector operator /= (Vector & a, double b)
+    {
+        a.x /= b;
+        a.y /= b;
+
+        return a;
+    }
+
+    constexpr Vector operator / (Vector const & a, double b)
+    {
+        auto dividend = a;
+        return dividend /= b;
+    }
+
     struct Rectangle
     {
         Vector position;
