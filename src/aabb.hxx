@@ -30,6 +30,39 @@ namespace
             }
         };
     }
+
+    constexpr bool is_above_low_diagonal(
+        aabb::Rectangle const & start,
+        aabb::Vector const & delta_position,
+        aabb::Rectangle const & obstacle
+    )
+    {
+        auto const slope = delta_position.y / delta_position.x;
+        auto const delta_y = slope * (obstacle.position.x - start.position.x - start.size.x);
+        return obstacle.position.y + obstacle.size.y > start.position.y + delta_y;
+    }
+
+    constexpr bool is_below_high_diagonal(
+        aabb::Rectangle const & start,
+        aabb::Vector const & delta_position,
+        aabb::Rectangle const & obstacle
+    )
+    {
+        auto const slope = delta_position.y / delta_position.x;
+        auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.y);
+        return obstacle.position.y < start.position.y + start.size.y + delta_y;
+    }
+
+    constexpr bool collide_diagonally(
+        aabb::Rectangle const & start,
+        aabb::Vector const & delta_position,
+        aabb::Rectangle const & obstacle
+    )
+    {
+        auto const slope = delta_position.y / delta_position.x;
+        return is_above_low_diagonal(start, delta_position, obstacle)
+            && is_below_high_diagonal(start, delta_position, obstacle);
+    }
 }
 
 namespace aabb
@@ -52,7 +85,7 @@ namespace aabb
     )
     {
         auto const outer_box = get_outer_box(start, delta_position);
-        return collide(obstacle, outer_box);
+        return collide(obstacle, outer_box) && collide_diagonally(start, delta_position, obstacle);
     }
 }
 

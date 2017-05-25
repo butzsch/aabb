@@ -58,3 +58,35 @@ TEST(ObstacleOutsideBottomLeftOuterBoundingBox, DoesntCollide)
     ASSERT_FALSE(move_collide(start, delta_position, obstacle));
 }
 
+TEST(ObstaclesBelowTopRightDiagonalArea, DontCollide)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { 3.0, 3.0 };
+
+    static auto constexpr below_middle_obstacle = Rectangle { Vector { 2.0, 0.0 }, size };
+    ASSERT_FALSE(move_collide(start, delta_position, below_middle_obstacle));
+
+    static auto constexpr above_middle_obstacle = Rectangle {
+        Vector { 3.0, 1.0 },
+        Vector { 5.0, 1.0 }
+    };
+    ASSERT_FALSE(move_collide(start, delta_position, above_middle_obstacle));
+}
+
+TEST(ObstaclesAboveTopRightDiagonalArea, DontCollide)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { 3.0, 3.0 };
+
+    static auto constexpr below_middle_obstacle = Rectangle { Vector { 0.0, 2.0 }, size };
+    ASSERT_FALSE(move_collide(start, delta_position, below_middle_obstacle));
+
+    static auto constexpr above_middle_obstacle = Rectangle {
+        Vector { 0.0, 3.0 },
+        Vector { 2.0, 1.0 }
+    };
+    ASSERT_FALSE(move_collide(start, delta_position, below_middle_obstacle));
+}
+
