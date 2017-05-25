@@ -33,6 +33,20 @@ namespace aabb
         return summand += b;
     }
 
+    constexpr Vector & operator -= (Vector & a, Vector const & b)
+    {
+        a.x -= b.x;
+        a.y -= b.y;
+
+        return a;
+    }
+
+    constexpr Vector operator - (Vector const & a, Vector const & b)
+    {
+        auto minuend = a;
+        return minuend -= b;
+    }
+
     struct Rectangle
     {
         Vector position;

@@ -45,21 +45,31 @@ TEST(IdenticalDestinationAndObstacle, Collide)
     ASSERT_TRUE(move_collide(start, delta_position, obstacle));
 }
 
-TEST(ObstacleOutsideOuterBoundingBox, DoesntCollide)
+TEST(ObstaclesOutsideTopRightOuterBoundingBox, DontCollide)
 {
     static auto constexpr size = Vector { 1.0, 1.0 };
     static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { 2.0, 2.0 };
 
-    {
-        static auto constexpr delta_position = Vector { 2.0, 2.0 };
-        static auto constexpr obstacle = Rectangle { Vector { 5.0, 5.0 }, size };
-        ASSERT_FALSE(move_collide(start, delta_position, obstacle));
-    }
+    static auto constexpr far_away_obstacle = Rectangle { start.position + delta_position + Vector { 5.0, 5.0 }, size };
+    ASSERT_FALSE(move_collide(start, delta_position, far_away_obstacle));
 
-    {
-        static auto constexpr negative_delta_position = Vector { -2.0, -2.0 };
-        static auto constexpr obstacle = Rectangle { Vector { 2.0, 2.0 } , size };
-        ASSERT_FALSE(move_collide(start, negative_delta_position, obstacle));
-    }
+    static auto constexpr touching_destination_obstacle = Rectangle { start.position + delta_position + size, size };
+    ASSERT_FALSE(move_collide(start, delta_position, touching_destination_obstacle));
+
+    static auto constexpr behind_start_obstacle = Rectangle { start.position - size, size };
+    ASSERT_FALSE(move_collide(start, delta_position, behind_start_obstacle));
+
+    static auto constexpr top_left_obstacle = Rectangle { start.position - size + Vector { 0.0, delta_position.y }, size};
+    ASSERT_FALSE(move_collide(start, delta_position, top_left_obstacle));
+}
+
+TEST(ObstacleOutsideBottomLeftOuterBoundingBox, DoesntCollide)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { -2.0, -2.0 };
+    static auto constexpr obstacle = Rectangle { Vector { 2.0, 2.0 } , size };
+    ASSERT_FALSE(move_collide(start, delta_position, obstacle));
 }
 
