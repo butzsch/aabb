@@ -35,37 +35,35 @@ namespace
         };
     }
 
+    constexpr double get_short_delta_x(aabb::Rectangle const & start, aabb::Rectangle const & obstacle)
+    {
+        return obstacle.position.x - start.position.x - start.size.x;
+    }
+
+    constexpr double get_long_delta_x(aabb::Rectangle const & start, aabb::Rectangle const & obstacle)
+    {
+        return obstacle.position.x + obstacle.size.x - start.position.x;
+    }
+
     constexpr bool is_above_low_diagonal(
         aabb::Rectangle const & start,
-        aabb::Vector const & delta_position,
-        aabb::Rectangle const & obstacle
+        aabb::Rectangle const & obstacle,
+        double slope
     )
     {
-        auto const slope = delta_position.y / delta_position.x;
-        if(slope > 0)
-        {
-            auto const delta_y = slope * (obstacle.position.x - start.position.x - start.size.x);
-            return obstacle.position.y + obstacle.size.y > start.position.y + delta_y;
-        }
-
-        auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.x);
+        auto const delta_x = slope > 0 ? get_short_delta_x(start, obstacle) : get_long_delta_x(start, obstacle);
+        auto const delta_y = slope * delta_x;
         return obstacle.position.y + obstacle.size.y > start.position.y + delta_y;
     }
 
     constexpr bool is_below_high_diagonal(
         aabb::Rectangle const & start,
-        aabb::Vector const & delta_position,
-        aabb::Rectangle const & obstacle
+        aabb::Rectangle const & obstacle,
+        double slope
     )
     {
-        auto const slope = delta_position.y / delta_position.x;
-        if(slope > 0)
-        {
-            auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.x);
-            return obstacle.position.y < start.position.y + start.size.y + delta_y;
-        }
-
-        auto const delta_y = slope * (obstacle.position.x - start.position.x - start.size.x);
+        auto const delta_x = slope > 0 ? get_long_delta_x(start, obstacle) : get_short_delta_x(start, obstacle);
+        auto const delta_y = slope * delta_x;
         return obstacle.position.y < start.position.y + start.size.y + delta_y;
     }
 
@@ -75,8 +73,8 @@ namespace
         aabb::Rectangle const & obstacle
     )
     {
-        return is_above_low_diagonal(start, delta_position, obstacle)
-            && is_below_high_diagonal(start, delta_position, obstacle);
+        auto const slope = delta_position.y / delta_position.x;
+        return is_above_low_diagonal(start, obstacle, slope) && is_below_high_diagonal(start, obstacle, slope);
     }
 }
 
