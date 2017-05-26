@@ -46,3 +46,19 @@ TEST(OverlappingObjectMovement, IsZero)
 
     ASSERT_THAT(get_narrowed_movement(start, delta_position, obstacle), Eq(Vector { 0.0, 0.0 }));
 }
+
+TEST(OnEdgeBottomLeftMovement, IsNarrowedCorrectly)
+{
+    static auto constexpr start = Rectangle {
+        Vector { 0.0, 0.0 },
+        Vector { 1.0, 1.0 },
+    };
+    static auto constexpr delta_position = Vector { -10.0, -10.0 };
+    static auto constexpr obstacle = Rectangle {
+        Vector { -5.0, -5.0 },
+        Vector { 1.0, 1.0 },
+    };
+
+    ASSERT_THAT(get_narrowed_movement(start, delta_position, obstacle), Eq(obstacle.position - obstacle.size));
+}
+

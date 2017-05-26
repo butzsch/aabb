@@ -118,7 +118,12 @@ namespace aabb
             return Vector { 0.0, 0.0 };
 
         if(move_collide(start, delta_position, obstacle))
-            return obstacle.position;
+        {
+            if(delta_position.x > 0)
+                return obstacle.position;
+
+            return obstacle.position - obstacle.size;
+        }
 
         return delta_position;
     }
