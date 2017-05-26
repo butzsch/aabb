@@ -181,3 +181,44 @@ TEST(ObstaclesAboveTopLeftDiagonalArea, DontCollide)
     ASSERT_FALSE(move_collide(start, delta_position, above_middle_obstacle));
 }
 
+TEST(HorizontalMovement, WorksCorrectly)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { 10.0, 0.0 };
+
+    static auto constexpr in_obstacle = Rectangle { Vector { 5.0, 0.0 }, size };
+    ASSERT_TRUE(move_collide(start, delta_position, in_obstacle));
+
+    static auto constexpr up_obstacle = Rectangle { Vector { 5.0, 0.5 }, size };
+    ASSERT_TRUE(move_collide(start, delta_position, up_obstacle));
+
+    static auto constexpr down_obstacle = Rectangle { Vector {5.0, -2.0 }, Vector { 1.0, 10.0 } };
+    ASSERT_TRUE(move_collide(start, delta_position, down_obstacle));
+
+    static auto constexpr above_obstacle = Rectangle { Vector { 5.0, 1.0 }, size };
+    ASSERT_FALSE(move_collide(start, delta_position, above_obstacle));
+
+    static auto constexpr out_obstacle = Rectangle { Vector { 15.0, 0.0 }, size };
+    ASSERT_FALSE(move_collide(start, delta_position, out_obstacle));
+}
+
+TEST(VerticalMovement, WorksCorrectly)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { 0.0, 10.0 };
+
+    static auto constexpr in_obstacle = Rectangle { Vector { 0.0, 5.0 }, size };
+    ASSERT_TRUE(move_collide(start, delta_position, in_obstacle));
+
+    static auto constexpr out_obstacle = Rectangle { Vector { 0.0, 11.0 }, size };
+    ASSERT_FALSE(move_collide(start, delta_position, out_obstacle));
+
+    static auto constexpr left_obstacle = Rectangle { Vector { -10.0, 5.0 }, Vector { 20.0, 1.0 } };
+    ASSERT_TRUE(move_collide(start, delta_position, left_obstacle));
+
+    static auto constexpr right_obstacle = Rectangle { Vector { 0.5, 5.0 }, size };
+    ASSERT_TRUE(move_collide(start, delta_position, right_obstacle));
+}
+
