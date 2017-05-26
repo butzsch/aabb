@@ -89,7 +89,7 @@ TEST(ObstaclesAboveTopRightDiagonalArea, DontCollide)
         Vector { 0.0, 3.0 },
         Vector { 2.0, 1.0 }
     };
-    ASSERT_FALSE(move_collide(start, delta_position, below_middle_obstacle));
+    ASSERT_FALSE(move_collide(start, delta_position, above_middle_obstacle));
 }
 
 TEST(ObstaclesBelowBottomLeftDiagonalArea, DontCollide)
