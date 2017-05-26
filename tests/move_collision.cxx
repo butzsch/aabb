@@ -1,3 +1,5 @@
+#include <vector>
+
 #include <gtest/gtest.h>
 
 #include "aabb.hxx"
@@ -128,5 +130,38 @@ TEST(ObstaclesOnBottomRightDiagonal, Collide)
     };
 
     ASSERT_TRUE(move_collide(start, delta_position, in_middle_obstacle));
+}
+
+TEST(ObstaclesOnTopLeftDiagonal, Collide)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { -10.0, 10.0 };
+
+    static auto constexpr in_middle_obstacle = Rectangle {
+        delta_position / 2,
+        size
+    };
+
+    ASSERT_TRUE(move_collide(start, delta_position, in_middle_obstacle));
+}
+
+TEST(OverlappingStartAndObstacle, Collide)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+
+    auto const delta_positions = std::vector<Vector> {
+        Vector { 1.0, 1.0 },
+        Vector { 1.0, -1.0 },
+        Vector { -1.0, -1.0 },
+        Vector { -1.0, 1.0 }
+    };
+
+    for(auto const & delta_position : delta_positions)
+    {
+        auto const obstacle = Rectangle { delta_position / 2, size };
+        ASSERT_TRUE(move_collide(start, delta_position, obstacle));
+    }
 }
 
