@@ -76,16 +76,20 @@ namespace
         auto const slope = delta_position.y / delta_position.x;
         return is_above_low_diagonal(start, obstacle, slope) && is_below_high_diagonal(start, obstacle, slope);
     }
+
+    constexpr void assert_positive_size(aabb::Rectangle const & x)
+    {
+        assert(x.size.x > 0);
+        assert(x.size.y > 0);
+    }
 }
 
 namespace aabb
 {
     constexpr bool collide(Rectangle const & a, Rectangle const & b)
     {
-        assert(a.size.x > 0);
-        assert(a.size.y > 0);
-        assert(b.size.x > 0);
-        assert(b.size.y > 0);
+        assert_positive_size(a);
+        assert_positive_size(b);
 
         return collide_on_axis(a.position.x, a.size.x, b.position.x, b.size.x)
             && collide_on_axis(a.position.y, a.size.y, b.position.y, b.size.y);
@@ -97,6 +101,9 @@ namespace aabb
         Rectangle const & obstacle
     )
     {
+        assert_positive_size(start);
+        assert_positive_size(obstacle);
+
         auto const outer_box = get_outer_box(start, delta_position);
         return collide(obstacle, outer_box) && collide_diagonally(start, delta_position, obstacle);
     }
