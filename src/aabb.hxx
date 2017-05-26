@@ -38,7 +38,13 @@ namespace
     )
     {
         auto const slope = delta_position.y / delta_position.x;
-        auto const delta_y = slope * (obstacle.position.x - start.position.x - start.size.x);
+        if(slope > 0)
+        {
+            auto const delta_y = slope * (obstacle.position.x - start.position.x - start.size.x);
+            return obstacle.position.y + obstacle.size.y > start.position.y + delta_y;
+        }
+
+        auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.x);
         return obstacle.position.y + obstacle.size.y > start.position.y + delta_y;
     }
 
@@ -49,7 +55,13 @@ namespace
     )
     {
         auto const slope = delta_position.y / delta_position.x;
-        auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.y);
+        if(slope > 0)
+        {
+            auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.y);
+            return obstacle.position.y < start.position.y + start.size.y + delta_y;
+        }
+
+        auto const delta_y = slope * (obstacle.position.x - start.position.x - start.size.x);
         return obstacle.position.y < start.position.y + start.size.y + delta_y;
     }
 
@@ -59,7 +71,6 @@ namespace
         aabb::Rectangle const & obstacle
     )
     {
-        auto const slope = delta_position.y / delta_position.x;
         return is_above_low_diagonal(start, delta_position, obstacle)
             && is_below_high_diagonal(start, delta_position, obstacle);
     }

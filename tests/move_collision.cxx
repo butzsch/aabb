@@ -116,3 +116,17 @@ TEST(ObstaclesAboveBottomLeftDiagonalArea, DontCollide)
     ASSERT_FALSE(move_collide(start, delta_position, above_middle_obstacle));
 }
 
+TEST(ObstaclesOnBottomRightDiagonal, Collide)
+{
+    static auto constexpr size = Vector { 1.0, 1.0 };
+    static auto constexpr start = Rectangle { Vector { 0.0, 0.0 }, size };
+    static auto constexpr delta_position = Vector { 10.0, -10.0 };
+
+    static auto constexpr in_middle_obstacle = Rectangle {
+        delta_position / 2,
+        size
+    };
+
+    ASSERT_TRUE(move_collide(start, delta_position, in_middle_obstacle));
+}
+
