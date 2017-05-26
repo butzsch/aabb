@@ -114,6 +114,9 @@ namespace aabb
         Rectangle const & obstacle
     )
     {
+        assert_positive_size(start);
+        assert_positive_size(obstacle);
+
         if(collide(start, obstacle))
             return Vector { 0.0, 0.0 };
 
