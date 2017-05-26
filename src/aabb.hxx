@@ -61,7 +61,7 @@ namespace
         auto const slope = delta_position.y / delta_position.x;
         if(slope > 0)
         {
-            auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.y);
+            auto const delta_y = slope * (obstacle.position.x + obstacle.size.x - start.position.x);
             return obstacle.position.y < start.position.y + start.size.y + delta_y;
         }
 
