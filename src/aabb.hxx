@@ -107,6 +107,15 @@ namespace aabb
         auto const outer_box = get_outer_box(start, delta_position);
         return collide(obstacle, outer_box) && collide_diagonally(start, delta_position, obstacle);
     }
+
+    constexpr Vector get_narrowed_movement(
+        Rectangle const & start,
+        Vector const & delta_position,
+        Rectangle const & obstacle
+    )
+    {
+        return delta_position;
+    }
 }
 
 #endif // AABB_AABB_HXX_INC

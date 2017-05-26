@@ -9,6 +9,16 @@ namespace aabb
         double y;
     };
 
+    constexpr bool operator == (Vector const & a, Vector const & b)
+    {
+        return a.x == b.x && a.y == b.y;
+    }
+
+    constexpr bool operator != (Vector const & a, Vector const & b)
+    {
+        return !(a == b);
+    }
+
     constexpr Vector & operator += (Vector & a, Vector const & b)
     {
         a.x += b.x;
