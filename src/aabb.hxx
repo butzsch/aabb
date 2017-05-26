@@ -114,6 +114,12 @@ namespace aabb
         Rectangle const & obstacle
     )
     {
+        if(collide(start, obstacle))
+            return Vector { 0.0, 0.0 };
+
+        if(move_collide(start, delta_position, obstacle))
+            return obstacle.position;
+
         return delta_position;
     }
 }
