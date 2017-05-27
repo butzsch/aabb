@@ -5,10 +5,11 @@
 
 namespace aabb
 {
+	template<typename T>
     struct Rectangle
     {
-        Vector position;
-        Vector size;
+        Vector<T> position;
+        Vector<T> size;
     };
 }
 

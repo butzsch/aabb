@@ -3,23 +3,27 @@
 
 namespace aabb
 {
+	template<typename T>
     struct Vector
     {
-        double x;
-        double y;
+        T x;
+        T y;
     };
 
-    constexpr bool operator == (Vector const & a, Vector const & b)
+	template<typename T>
+    constexpr bool operator == (Vector<T> const & a, Vector<T> const & b)
     {
         return a.x == b.x && a.y == b.y;
     }
 
-    constexpr bool operator != (Vector const & a, Vector const & b)
+	template<typename T>
+    constexpr bool operator != (Vector<T> const & a, Vector<T> const & b)
     {
         return !(a == b);
     }
 
-    constexpr Vector & operator += (Vector & a, Vector const & b)
+	template<typename T>
+    constexpr Vector<T> & operator += (Vector<T> & a, Vector<T> const & b)
     {
         a.x += b.x;
         a.y += b.y;
@@ -27,13 +31,15 @@ namespace aabb
         return a;
     }
 
-    constexpr Vector operator + (Vector const & a, Vector const & b)
+	template<typename T>
+    constexpr Vector<T> operator + (Vector<T> const & a, Vector<T> const & b)
     {
         auto summand = a;
         return summand += b;
     }
 
-    constexpr Vector & operator -= (Vector & a, Vector const & b)
+	template<typename T>
+    constexpr Vector<T> & operator -= (Vector<T> & a, Vector<T> const & b)
     {
         a.x -= b.x;
         a.y -= b.y;
@@ -41,13 +47,15 @@ namespace aabb
         return a;
     }
 
-    constexpr Vector operator - (Vector const & a, Vector const & b)
+	template<typename T>
+    constexpr Vector<T> operator - (Vector<T> const & a, Vector<T> const & b)
     {
         auto minuend = a;
         return minuend -= b;
     }
 
-	constexpr Vector & operator *= (Vector & a, double b)
+	template<typename T>
+	constexpr Vector<T> & operator *= (Vector<T> & a, T b)
 	{
 		a.x *= b;
 		a.y *= b;
@@ -55,13 +63,15 @@ namespace aabb
 		return a;
 	}
 
-	constexpr Vector operator * (Vector const & a, double b)
+	template<typename T>
+	constexpr Vector<T> operator * (Vector<T> const & a, T b)
 	{
 		auto factor = a;
 		return factor *= b;
 	}
 
-    constexpr Vector operator /= (Vector & a, double b)
+	template<typename T>
+    constexpr Vector<T> operator /= (Vector<T> & a, T b)
     {
         a.x /= b;
         a.y /= b;
@@ -69,7 +79,8 @@ namespace aabb
         return a;
     }
 
-    constexpr Vector operator / (Vector const & a, double b)
+	template<typename T>
+    constexpr Vector<T> operator / (Vector<T> const & a, T b)
     {
         auto dividend = a;
         return dividend /= b;
