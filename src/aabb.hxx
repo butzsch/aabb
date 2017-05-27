@@ -124,29 +124,6 @@ namespace aabb
         return collide(obstacle, outer_box)
             && (delta_position.x == 0 || collide_diagonally(start, delta_position, obstacle));
     }
-
-    constexpr Vector get_narrowed_movement(
-        Rectangle const & start,
-        Vector const & delta_position,
-        Rectangle const & obstacle
-    )
-    {
-        assert_positive_size(start);
-        assert_positive_size(obstacle);
-
-        if(collide(start, obstacle))
-            return Vector { 0.0, 0.0 };
-
-        if(move_collide(start, delta_position, obstacle))
-        {
-            if(delta_position.x > 0)
-                return obstacle.position;
-
-            return obstacle.position - obstacle.size;
-        }
-
-        return delta_position;
-    }
 }
 
 #endif // AABB_AABB_HXX_INC
