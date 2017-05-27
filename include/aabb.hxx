@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <cassert>
 
-#include "Rectangle.hxx"
-#include "Vector.hxx"
+#include "../src/Rectangle.hxx"
+#include "../src/Vector.hxx"
 
 namespace
 {
