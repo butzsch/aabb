@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cassert>
 
-#include "../src/Rectangle.hxx"
+#include "../src/Box.hxx"
 #include "../src/Vector.hxx"
 
 namespace
@@ -22,14 +22,14 @@ namespace
     }
 
 	template<typename T>
-    constexpr void assert_positive_size(aabb::Rectangle<T> const & x)
+    constexpr void assert_positive_size(aabb::Box<T> const & x)
     {
         assert(x.size.x > 0);
         assert(x.size.y > 0);
     }
 
 	template<typename T>
-    constexpr aabb::Rectangle<T> get_outer_box(aabb::Rectangle<T> const & start, aabb::Vector<T> const & delta_position)
+    constexpr aabb::Box<T> get_outer_box(aabb::Box<T> const & start, aabb::Vector<T> const & delta_position)
     {
         assert_positive_size(start);
 
@@ -48,7 +48,7 @@ namespace
     }
 
 	template<typename T>
-    constexpr double get_short_delta_x(aabb::Rectangle<T> const & start, aabb::Rectangle<T> const & obstacle)
+    constexpr double get_short_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
     {
         assert_positive_size(start);
         assert_positive_size(obstacle);
@@ -57,7 +57,7 @@ namespace
     }
 
 	template<typename T>
-    constexpr double get_long_delta_x(aabb::Rectangle<T> const & start, aabb::Rectangle<T> const & obstacle)
+    constexpr double get_long_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
     {
         assert_positive_size(start);
         assert_positive_size(obstacle);
@@ -67,8 +67,8 @@ namespace
 
 	template<typename T>
     constexpr bool is_above_low_diagonal(
-        aabb::Rectangle<T> const & start,
-        aabb::Rectangle<T> const & obstacle,
+        aabb::Box<T> const & start,
+        aabb::Box<T> const & obstacle,
         double slope
     )
     {
@@ -82,8 +82,8 @@ namespace
 
 	template<typename T>
     constexpr bool is_below_high_diagonal(
-        aabb::Rectangle<T> const & start,
-        aabb::Rectangle<T> const & obstacle,
+        aabb::Box<T> const & start,
+        aabb::Box<T> const & obstacle,
         double slope
     )
     {
@@ -97,9 +97,9 @@ namespace
 
 	template<typename T>
     constexpr bool collide_diagonally(
-        aabb::Rectangle<T> const & start,
+        aabb::Box<T> const & start,
         aabb::Vector<T> const & delta_position,
-        aabb::Rectangle<T> const & obstacle
+        aabb::Box<T> const & obstacle
     )
     {
         assert(delta_position.x != 0);
@@ -112,7 +112,7 @@ namespace
 namespace aabb
 {
 	template<typename T>
-    constexpr bool collide(Rectangle<T> const & a, Rectangle<T> const & b)
+    constexpr bool collide(Box<T> const & a, Box<T> const & b)
     {
         assert_positive_size(a);
         assert_positive_size(b);
@@ -123,9 +123,9 @@ namespace aabb
 
 	template<typename T>
     constexpr bool move_collide(
-        Rectangle<T> const & start,
+        Box<T> const & start,
         Vector<T> const & delta_position,
-        Rectangle<T> const & obstacle
+        Box<T> const & obstacle
     )
     {
         assert_positive_size(start);
