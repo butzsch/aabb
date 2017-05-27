@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <cassert>
 
-#include "../src/Box.hxx"
-#include "../src/Vector.hxx"
+#include "Box.hxx"
+#include "Vector.hxx"
 
 namespace
 {
