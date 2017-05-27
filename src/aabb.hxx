@@ -10,7 +10,7 @@
 namespace
 {
 	template<typename T>
-	constexpr double abs(T x)
+	constexpr T abs(T x)
 	{
 		return x < 0 ? -x : x;
 	}
@@ -34,8 +34,8 @@ namespace
         assert_positive_size(start);
 
         auto const outer_position = aabb::Vector<T> {
-            start.position.x + std::min(delta_position.x, 0.0),
-            start.position.y + std::min(delta_position.y, 0.0)
+            start.position.x + std::min(delta_position.x, static_cast<T>(0)),
+            start.position.y + std::min(delta_position.y, static_cast<T>(0))
         };
 
         return {
