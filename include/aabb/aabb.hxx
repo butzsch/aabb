@@ -165,7 +165,8 @@ namespace aabb
             return EdgeType::NONE;
 
         auto const start_point = get_top_right(start);
-        auto const position = get_position(start_point, delta_position.x / delta_position.y, obstacle.position);
+        auto const target_point = get_bottom_left(obstacle);
+        auto const position = get_position(start_point, delta_position.x / delta_position.y, target_point);
         switch(position)
         {
             case Position::BELOW: return EdgeType::VERTICAL;
