@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "aabb/aabb.hxx"
+#include "aabb_testing.hxx"
 
 using namespace aabb;
 
@@ -83,5 +84,4 @@ REGISTER_TYPED_TEST_CASE_P(CollisionFunction,
 	ReturnsThatRectagnlesWithSharedEdgesDontCollide
 );
 
-using types_to_test = testing::Types<int, double>;
-INSTANTIATE_TYPED_TEST_CASE_P(CollsionFunctionTest, CollisionFunction, types_to_test);
+INSTANTIATE_TYPED_TEST_CASE_P(CollsionFunctionTest, CollisionFunction, aabb_testing::types_to_test);
