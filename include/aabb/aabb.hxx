@@ -10,15 +10,9 @@
 namespace
 {
     template<typename T>
-    constexpr T abs(T x)
+    constexpr bool does_collide_on_axis(T a_low, T a_high, T b_low, T b_high)
     {
-        return x < 0 ? -x : x;
-    }
-
-    template<typename T>
-    constexpr bool does_collide_on_axis(T a_pos, T a_size, T b_pos, T b_size)
-    {
-        return a_pos < b_pos + b_size && b_pos < a_pos + a_size;
+        return a_low < b_high && b_low < a_high;
     }
 
     template<typename T>
@@ -29,13 +23,19 @@ namespace
     }
 
     template<typename T>
+    constexpr T abs(T x)
+    {
+        return x < 0 ? -x : x;
+    }
+
+    template<typename T>
     constexpr aabb::Box<T> get_outer_box(aabb::Box<T> const & start, aabb::Vector<T> const & delta_position)
     {
         assert_positive_size(start);
 
         auto const outer_position = aabb::Vector<T> {
             start.position.x + std::min(delta_position.x, static_cast<T>(0)),
-            start.position.y + std::min(delta_position.y, static_cast<T>(0))
+            start.position.y + std::min(delta_position.y, static_cast<T>(0)),
         };
 
         return {
@@ -81,8 +81,8 @@ namespace
         assert_positive_size(obstacle);
 
         auto const upwards = slope > 0;
-        auto const start_point = upwards ? get_lower_right(start) : get_lower_left(start);
-        auto const target_point = upwards ? get_upper_left(obstacle) : get_upper_right(obstacle);
+        auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
+        auto const target_point = upwards ? get_top_left(obstacle) : get_top_right(obstacle);
 
         return get_position(start_point, slope, target_point) == Position::ABOVE;
     }
@@ -98,8 +98,8 @@ namespace
         assert_positive_size(obstacle);
 
         auto const upwards = slope > 0;
-        auto const start_point = upwards ? get_upper_left(start) : get_upper_right(start);
-        auto const target_point = upwards ? get_lower_right(obstacle) : get_lower_left(obstacle);
+        auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
+        auto const target_point = upwards ? get_bottom_right(obstacle) : get_bottom_left(obstacle);
 
         return get_position(start_point, slope, target_point) == Position::BELOW;
     }
@@ -120,22 +120,14 @@ namespace
 
 namespace aabb
 {
-    enum EdgeType
-    {
-        NONE = 0,
-        HORIZONTAL = 1,
-        VERTICAL = 2,
-        BOTH = HORIZONTAL | VERTICAL
-    };
-
     template<typename T>
     constexpr bool does_collide(Box<T> const & a, Box<T> const & b)
     {
         assert_positive_size(a);
         assert_positive_size(b);
 
-        return does_collide_on_axis(a.position.x, a.size.x, b.position.x, b.size.x)
-            && does_collide_on_axis(a.position.y, a.size.y, b.position.y, b.size.y);
+        return does_collide_on_axis(get_left(a), get_right(a), get_left(b), get_right(b))
+            && does_collide_on_axis(get_bottom(a), get_top(a), get_bottom(b), get_top(b));
     }
 
     template<typename T>
@@ -153,6 +145,14 @@ namespace aabb
             && (delta_position.x == 0 || delta_position.y == 0 || is_in_limited_area(start, delta_position, obstacle));
     }
 
+    enum EdgeType
+    {
+        NONE = 0,
+        HORIZONTAL = 1,
+        VERTICAL = 2,
+        BOTH = HORIZONTAL | VERTICAL
+    };
+
     template<typename T>
     constexpr EdgeType get_colliding_edges(
         Box<T> const & start,
@@ -164,10 +164,7 @@ namespace aabb
         if(!would_collide(start, delta_position, obstacle))
             return EdgeType::NONE;
 
-        auto const start_point = Vector<T> {
-            start.position.x + start.size.x,
-            start.position.y + start.size.y
-        };
+        auto const start_point = get_top_right(start);
         auto const position = get_position(start_point, delta_position.x / delta_position.y, obstacle.position);
         switch(position)
         {

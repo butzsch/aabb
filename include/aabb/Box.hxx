@@ -13,7 +13,31 @@ namespace aabb
     };
 
     template<typename T>
-    constexpr Vector<T> get_upper_left(Box<T> const & box)
+    constexpr T get_left(Box<T> const & box)
+    {
+        return box.position.x;
+    }
+
+    template<typename T>
+    constexpr T get_right(Box<T> const & box)
+    {
+        return box.position.x + box.size.x;
+    }
+
+    template<typename T>
+    constexpr T get_bottom(Box<T> const & box)
+    {
+        return box.position.y;
+    }
+
+    template<typename T>
+    constexpr T get_top(Box<T> const & box)
+    {
+        return box.position.y + box.size.y;
+    }
+
+    template<typename T>
+    constexpr Vector<T> get_top_left(Box<T> const & box)
     {
         return {
             box.position.x,
@@ -22,7 +46,7 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> get_upper_right(Box<T> const & box)
+    constexpr Vector<T> get_top_right(Box<T> const & box)
     {
         return {
             box.position.x + box.size.x,
@@ -31,7 +55,7 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> get_lower_left(Box<T> const & box)
+    constexpr Vector<T> get_bottom_left(Box<T> const & box)
     {
         return {
             box.position.x,
@@ -40,7 +64,7 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> get_lower_right(Box<T> const & box)
+    constexpr Vector<T> get_bottom_right(Box<T> const & box)
     {
         return {
             box.position.x + box.size.x,
