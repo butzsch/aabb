@@ -48,7 +48,7 @@ namespace
     }
 
     template<typename T>
-    constexpr double get_short_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
+    constexpr T get_short_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
     {
         assert_positive_size(start);
         assert_positive_size(obstacle);
@@ -57,7 +57,7 @@ namespace
     }
 
     template<typename T>
-    constexpr double get_long_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
+    constexpr T get_long_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
     {
         assert_positive_size(start);
         assert_positive_size(obstacle);
@@ -69,7 +69,7 @@ namespace
     constexpr bool is_above_low_diagonal(
         aabb::Box<T> const & start,
         aabb::Box<T> const & obstacle,
-        double slope
+        T slope
     )
     {
         assert_positive_size(start);
