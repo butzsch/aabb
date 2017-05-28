@@ -47,67 +47,6 @@ namespace
         };
     }
 
-    template<typename T>
-    constexpr T get_short_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
-    {
-        assert_positive_size(start);
-        assert_positive_size(obstacle);
-
-        return obstacle.position.x - start.position.x - start.size.x;
-    }
-
-    template<typename T>
-    constexpr T get_long_delta_x(aabb::Box<T> const & start, aabb::Box<T> const & obstacle)
-    {
-        assert_positive_size(start);
-        assert_positive_size(obstacle);
-
-        return obstacle.position.x + obstacle.size.x - start.position.x;
-    }
-
-    template<typename T>
-    constexpr bool is_above_low_diagonal(
-        aabb::Box<T> const & start,
-        aabb::Box<T> const & obstacle,
-        T slope
-    )
-    {
-        assert_positive_size(start);
-        assert_positive_size(obstacle);
-
-        auto const delta_x = slope > 0 ? get_short_delta_x(start, obstacle) : get_long_delta_x(start, obstacle);
-        auto const delta_y = slope * delta_x;
-        return obstacle.position.y + obstacle.size.y > start.position.y + delta_y;
-    }
-
-    template<typename T>
-    constexpr bool is_below_high_diagonal(
-        aabb::Box<T> const & start,
-        aabb::Box<T> const & obstacle,
-        T slope
-    )
-    {
-        assert_positive_size(start);
-        assert_positive_size(obstacle);
-
-        auto const delta_x = slope > 0 ? get_long_delta_x(start, obstacle) : get_short_delta_x(start, obstacle);
-        auto const delta_y = slope * delta_x;
-        return obstacle.position.y < start.position.y + start.size.y + delta_y;
-    }
-
-    template<typename T>
-    constexpr bool is_in_limited_area(
-        aabb::Box<T> const & start,
-        aabb::Vector<T> const & delta_position,
-        aabb::Box<T> const & obstacle
-    )
-    {
-        assert(delta_position.x != 0);
-
-        auto const slope = delta_position.y / delta_position.x;
-        return is_above_low_diagonal(start, obstacle, slope) && is_below_high_diagonal(start, obstacle, slope);
-    }
-
     enum class Position
     {
         BELOW,
@@ -129,6 +68,53 @@ namespace
             return Position::BELOW;
 
         return Position::EQUAL;
+    }
+
+    template<typename T>
+    constexpr bool is_above_low_diagonal(
+        aabb::Box<T> const & start,
+        aabb::Box<T> const & obstacle,
+        T slope
+    )
+    {
+        assert_positive_size(start);
+        assert_positive_size(obstacle);
+
+        auto const upwards = slope > 0;
+        auto const start_point = upwards ? get_lower_right(start) : get_lower_left(start);
+        auto const target_point = upwards ? get_upper_left(obstacle) : get_upper_right(obstacle);
+
+        return get_position(start_point, slope, target_point) == Position::ABOVE;
+    }
+
+    template<typename T>
+    constexpr bool is_below_high_diagonal(
+        aabb::Box<T> const & start,
+        aabb::Box<T> const & obstacle,
+        T slope
+    )
+    {
+        assert_positive_size(start);
+        assert_positive_size(obstacle);
+
+        auto const upwards = slope > 0;
+        auto const start_point = upwards ? get_upper_left(start) : get_upper_right(start);
+        auto const target_point = upwards ? get_lower_right(obstacle) : get_lower_left(obstacle);
+
+        return get_position(start_point, slope, target_point) == Position::BELOW;
+    }
+
+    template<typename T>
+    constexpr bool is_in_limited_area(
+        aabb::Box<T> const & start,
+        aabb::Vector<T> const & delta_position,
+        aabb::Box<T> const & obstacle
+    )
+    {
+        assert(delta_position.x != 0);
+
+        auto const slope = delta_position.y / delta_position.x;
+        return is_above_low_diagonal(start, obstacle, slope) && is_below_high_diagonal(start, obstacle, slope);
     }
 }
 
@@ -164,7 +150,7 @@ namespace aabb
 
         auto const outer_box = get_outer_box(start, delta_position);
         return does_collide(obstacle, outer_box)
-            && (delta_position.x == 0 || is_in_limited_area(start, delta_position, obstacle));
+            && (delta_position.x == 0 || delta_position.y == 0 || is_in_limited_area(start, delta_position, obstacle));
     }
 
     template<typename T>
