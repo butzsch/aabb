@@ -111,6 +111,11 @@ namespace
 
 namespace aabb
 {
+    enum class EdgeType
+    {
+        NONE = 0,
+    };
+
     template<typename T>
     constexpr bool does_collide(Box<T> const & a, Box<T> const & b)
     {
@@ -134,6 +139,17 @@ namespace aabb
         auto const outer_box = get_outer_box(start, delta_position);
         return does_collide(obstacle, outer_box)
             && (delta_position.x == 0 || is_in_limited_area(start, delta_position, obstacle));
+    }
+
+    template<typename T>
+    constexpr EdgeType get_colliding_edges(
+        Box<T> const & start,
+        Vector<T> const & delta_position,
+        Box<T> const & obstacle
+    )
+    {
+        assert(!does_collide(start, obstacle));
+        return EdgeType::NONE;
     }
 }
 
