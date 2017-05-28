@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "aabb.hxx"
+#include "aabb/aabb.hxx"
 
 using namespace aabb;
 
