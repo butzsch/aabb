@@ -1,22 +1,19 @@
-add_executable(aabb_test_command_double
+add_executable(aabb_collision_test_command
     main.cxx
-    collision_double.cxx
-    move_collision_double.cxx
+    collision.cxx
 )
 
-target_include_directories(aabb_test_command_double PRIVATE "${CMAKE_SOURCE_DIR}/include")
-target_link_libraries(aabb_test_command_double gmock gtest)
+target_include_directories(aabb_collision_test_command PRIVATE "${CMAKE_SOURCE_DIR}/include")
+target_link_libraries(aabb_collision_test_command gmock gtest)
 
-add_test(NAME aabb_test_double COMMAND aabb_test_command_double)
+add_test(NAME aabb_collision_test COMMAND aabb_collision_test_command)
 
-add_executable(aabb_test_command_int
+add_executable(aabb_move_collision_test_command
     main.cxx
-    collision_int.cxx
-    move_collision_int.cxx
+    move_collision.cxx
 )
 
-target_include_directories(aabb_test_command_int PRIVATE "${CMAKE_SOURCE_DIR}/include")
-target_link_libraries(aabb_test_command_int gmock gtest)
+target_include_directories(aabb_move_collision_test_command PRIVATE "${CMAKE_SOURCE_DIR}/include")
+target_link_libraries(aabb_move_collision_test_command gmock gtest)
 
-add_test(NAME aabb_test_int COMMAND aabb_test_command_int)
-
+add_test(NAME aabb_move_collision_test COMMAND aabb_move_collision_test_command)
