@@ -5,7 +5,7 @@
 
 namespace aabb
 {
-	template<typename T>
+    template<typename T>
     struct Box
     {
         Vector<T> position;
