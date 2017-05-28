@@ -6,8 +6,8 @@ namespace aabb
 	template<typename T>
     struct Vector
     {
-        T x;
-        T y;
+		T x = 0;
+        T y = 0;
     };
 
 	template<typename T>
