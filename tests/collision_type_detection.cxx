@@ -25,6 +25,13 @@ TYPED_TEST_P(CollisionTypeFunction, AssertsThatObjectsDontAlreadyCollide)
     ASSERT_DEATH(get_colliding_edges(a, movement, a), "");
 }
 
+TEST(EdgeTypeBoth, IsBothHorizontalAndVertical)
+{
+    static auto constexpr both = EdgeType::BOTH;
+    ASSERT_TRUE(both & EdgeType::HORIZONTAL);
+    ASSERT_TRUE(both & EdgeType::VERTICAL);
+}
+
 REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     AssertsThatObjectsDontAlreadyCollide
 );

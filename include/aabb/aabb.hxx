@@ -111,9 +111,12 @@ namespace
 
 namespace aabb
 {
-    enum class EdgeType
+    enum EdgeType
     {
         NONE = 0,
+        HORIZONTAL = 1,
+        VERTICAL = 2,
+        BOTH = HORIZONTAL | VERTICAL
     };
 
     template<typename T>
