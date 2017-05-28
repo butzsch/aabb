@@ -16,7 +16,7 @@ namespace
     }
 
     template<typename T>
-    constexpr bool collide_on_axis(T a_pos, T a_size, T b_pos, T b_size)
+    constexpr bool does_collide_on_axis(T a_pos, T a_size, T b_pos, T b_size)
     {
         return a_pos < b_pos + b_size && b_pos < a_pos + a_size;
     }
@@ -96,7 +96,7 @@ namespace
     }
 
     template<typename T>
-    constexpr bool collide_diagonally(
+    constexpr bool is_in_limited_area(
         aabb::Box<T> const & start,
         aabb::Vector<T> const & delta_position,
         aabb::Box<T> const & obstacle
@@ -112,17 +112,17 @@ namespace
 namespace aabb
 {
     template<typename T>
-    constexpr bool collide(Box<T> const & a, Box<T> const & b)
+    constexpr bool does_collide(Box<T> const & a, Box<T> const & b)
     {
         assert_positive_size(a);
         assert_positive_size(b);
 
-        return collide_on_axis(a.position.x, a.size.x, b.position.x, b.size.x)
-            && collide_on_axis(a.position.y, a.size.y, b.position.y, b.size.y);
+        return does_collide_on_axis(a.position.x, a.size.x, b.position.x, b.size.x)
+            && does_collide_on_axis(a.position.y, a.size.y, b.position.y, b.size.y);
     }
 
     template<typename T>
-    constexpr bool move_collide(
+    constexpr bool would_collide(
         Box<T> const & start,
         Vector<T> const & delta_position,
         Box<T> const & obstacle
@@ -132,8 +132,8 @@ namespace aabb
         assert_positive_size(obstacle);
 
         auto const outer_box = get_outer_box(start, delta_position);
-        return collide(obstacle, outer_box)
-            && (delta_position.x == 0 || collide_diagonally(start, delta_position, obstacle));
+        return does_collide(obstacle, outer_box)
+            && (delta_position.x == 0 || is_in_limited_area(start, delta_position, obstacle));
     }
 }
 

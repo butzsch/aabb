@@ -18,8 +18,8 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatIdenticalRectanglesCollide)
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> {0, 0}, Vector<TypeParam> {1, 1}};
     static auto constexpr b = a;
 
-    ASSERT_TRUE(collide(a, b));
-    ASSERT_TRUE(collide(b, a));
+    ASSERT_TRUE(does_collide(a, b));
+    ASSERT_TRUE(does_collide(b, a));
 }
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallShiftedRectanglesDontCollide)
@@ -29,8 +29,8 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallShiftedRectanglesDontColli
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { 0, y }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { 5, y }, size};
 
-    ASSERT_FALSE(collide(a, b));
-    ASSERT_FALSE(collide(b, a));
+    ASSERT_FALSE(does_collide(a, b));
+    ASSERT_FALSE(does_collide(b, a));
 }
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyShiftedRectanglesDontCollide)
@@ -40,8 +40,8 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyShiftedRectanglesDontCollid
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { x, 0 }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { x, 5 }, size};
 
-    ASSERT_FALSE(collide(a, b));
-    ASSERT_FALSE(collide(b, a));
+    ASSERT_FALSE(does_collide(a, b));
+    ASSERT_FALSE(does_collide(b, a));
 }
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallyOverlappingRectanglesCollide)
@@ -51,8 +51,8 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallyOverlappingRectanglesColl
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { 0, y }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { 1, y }, size};
 
-    ASSERT_TRUE(collide(a, b));
-    ASSERT_TRUE(collide(b, a));
+    ASSERT_TRUE(does_collide(a, b));
+    ASSERT_TRUE(does_collide(b, a));
 }
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyOverlappingRectanglesCollide)
@@ -62,8 +62,8 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyOverlappingRectanglesCollid
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { x, 0 }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { x, 1 }, size};
 
-    ASSERT_TRUE(collide(a, b));
-    ASSERT_TRUE(collide(b, a));
+    ASSERT_TRUE(does_collide(a, b));
+    ASSERT_TRUE(does_collide(b, a));
 }
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatRectagnlesWithSharedEdgesDontCollide)
@@ -72,8 +72,8 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatRectagnlesWithSharedEdgesDontCollide)
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { 0, 0 }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { 1, 1 }, size};
 
-    ASSERT_FALSE(collide(a, b));
-    ASSERT_FALSE(collide(b, a));
+    ASSERT_FALSE(does_collide(a, b));
+    ASSERT_FALSE(does_collide(b, a));
 }
 
 REGISTER_TYPED_TEST_CASE_P(CollisionFunction,
