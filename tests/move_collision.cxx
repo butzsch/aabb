@@ -183,20 +183,20 @@ TEST(ObstaclesAboveTopLeftDiagonalArea, DontCollide)
 
 TEST(HorizontalMovement, WorksCorrectly)
 {
-    static auto constexpr size = Vector<double>{ 1.0, 1.0 };
+    static auto constexpr size = Vector<double>{ 2.0, 2.0 };
     static auto constexpr start = Box<double>{ Vector<double> { 0.0, 0.0 }, size };
     static auto constexpr delta_position = Vector<double>{ 10.0, 0.0 };
 
     static auto constexpr in_obstacle = Box<double>{ Vector<double> { 5.0, 0.0 }, size };
     ASSERT_TRUE(move_collide(start, delta_position, in_obstacle));
 
-    static auto constexpr up_obstacle = Box<double>{ Vector<double> { 5.0, 0.5 }, size };
+    static auto constexpr up_obstacle = Box<double>{ Vector<double> { 5.0, 1.0 }, size };
     ASSERT_TRUE(move_collide(start, delta_position, up_obstacle));
 
     static auto constexpr down_obstacle = Box<double>{ Vector<double> {5.0, -2.0 }, Vector<double> { 1.0, 10.0 } };
     ASSERT_TRUE(move_collide(start, delta_position, down_obstacle));
 
-    static auto constexpr above_obstacle = Box<double>{ Vector<double> { 5.0, 1.0 }, size };
+    static auto constexpr above_obstacle = Box<double>{ Vector<double> { 5.0, 2.0 }, size };
     ASSERT_FALSE(move_collide(start, delta_position, above_obstacle));
 
     static auto constexpr out_obstacle = Box<double>{ Vector<double> { 15.0, 0.0 }, size };
@@ -205,20 +205,20 @@ TEST(HorizontalMovement, WorksCorrectly)
 
 TEST(VerticalMovement, WorksCorrectly)
 {
-    static auto constexpr size = Vector<double>{ 1.0, 1.0 };
+    static auto constexpr size = Vector<double>{ 2.0, 2.0 };
     static auto constexpr start = Box<double>{ Vector<double> { 0.0, 0.0 }, size };
     static auto constexpr delta_position = Vector<double>{ 0.0, 10.0 };
 
     static auto constexpr in_obstacle = Box<double>{ Vector<double> { 0.0, 5.0 }, size };
     ASSERT_TRUE(move_collide(start, delta_position, in_obstacle));
 
-    static auto constexpr out_obstacle = Box<double>{ Vector<double> { 0.0, 11.0 }, size };
+    static auto constexpr out_obstacle = Box<double>{ Vector<double> { 0.0, 12.0 }, size };
     ASSERT_FALSE(move_collide(start, delta_position, out_obstacle));
 
     static auto constexpr left_obstacle = Box<double>{ Vector<double> { -10.0, 5.0 }, Vector<double> { 20.0, 1.0 } };
     ASSERT_TRUE(move_collide(start, delta_position, left_obstacle));
 
-    static auto constexpr right_obstacle = Box<double>{ Vector<double> { 0.5, 5.0 }, size };
+    static auto constexpr right_obstacle = Box<double>{ Vector<double> { 1.0, 5.0 }, size };
     ASSERT_TRUE(move_collide(start, delta_position, right_obstacle));
 }
 

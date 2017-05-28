@@ -38,9 +38,9 @@ TEST(VerticallyShiftedRectangles, DontCollide)
 TEST(HorizontallyOverlappingRectangles, Collide)
 {
     static auto constexpr y = 5.0;
-    static auto constexpr size = Vector<double>{ 1.0, 1.0 };
+    static auto constexpr size = Vector<double>{ 2.0, 2.0 };
     static auto constexpr a = Box<double>{ Vector<double> { 0.0, y }, size };
-    static auto constexpr b = Box<double>{ Vector<double> { 0.5, y }, size };
+    static auto constexpr b = Box<double>{ Vector<double> { 1.0, y }, size };
 
     ASSERT_TRUE(collide(a, b));
     ASSERT_TRUE(collide(b, a));
@@ -49,9 +49,9 @@ TEST(HorizontallyOverlappingRectangles, Collide)
 TEST(VerticallyOverlappingRectangles, Collide)
 {
     static auto constexpr x = 5.0;
-    static auto constexpr size = Vector<double>{ 1.0, 1.0 };
+    static auto constexpr size = Vector<double>{ 2.0, 2.0 };
     static auto constexpr a = Box<double>{ Vector<double> { x, 0.0 }, size };
-    static auto constexpr b = Box<double>{ Vector<double> { x, 0.5 }, size };
+    static auto constexpr b = Box<double>{ Vector<double> { x, 1.0 }, size };
 
     ASSERT_TRUE(collide(a, b));
     ASSERT_TRUE(collide(b, a));
