@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.6.0)
 project(aabb)
 
 option(BUILD_AABB_TESTS "Build the tests for the aabb library as well as the gtest/gmock dependency" FALSE)
