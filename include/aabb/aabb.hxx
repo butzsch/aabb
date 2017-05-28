@@ -84,7 +84,7 @@ namespace
     constexpr bool is_below_high_diagonal(
         aabb::Box<T> const & start,
         aabb::Box<T> const & obstacle,
-        double slope
+        T slope
     )
     {
         assert_positive_size(start);
@@ -106,6 +106,29 @@ namespace
 
         auto const slope = delta_position.y / delta_position.x;
         return is_above_low_diagonal(start, obstacle, slope) && is_below_high_diagonal(start, obstacle, slope);
+    }
+
+    enum class Position
+    {
+        BELOW,
+        ABOVE,
+        EQUAL
+    };
+
+    template<typename T>
+    constexpr Position get_position(
+        aabb::Vector<T> const & start_point,
+        T slope,
+        aabb::Vector<T> const & target_point
+    )
+    {
+        auto const result_y = slope * (target_point.x - start_point.x) + start_point.y;
+        if(result_y < target_point.y)
+            return Position::ABOVE;
+        if(result_y > target_point.y)
+            return Position::BELOW;
+
+        return Position::EQUAL;
     }
 }
 
@@ -152,7 +175,20 @@ namespace aabb
     )
     {
         assert(!does_collide(start, obstacle));
-        return EdgeType::NONE;
+        if(!would_collide(start, delta_position, obstacle))
+            return EdgeType::NONE;
+
+        auto const start_point = Vector<T> {
+            start.position.x + start.size.x,
+            start.position.y + start.size.y
+        };
+        auto const position = get_position(start_point, delta_position.x / delta_position.y, obstacle.position);
+        switch(position)
+        {
+            case Position::BELOW: return EdgeType::VERTICAL;
+            case Position::ABOVE: return EdgeType::HORIZONTAL;
+            case Position::EQUAL: return EdgeType::BOTH;
+        }
     }
 }
 
