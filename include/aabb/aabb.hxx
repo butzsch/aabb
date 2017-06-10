@@ -37,14 +37,12 @@ namespace
             start.position.x + std::min(delta_position.x, static_cast<T>(0)),
             start.position.y + std::min(delta_position.y, static_cast<T>(0)),
         };
-
-        return {
-            outer_position,
-            aabb::Vector<T> {
+        auto const outer_size = aabb::Vector<T> {
             start.size.x + abs(delta_position.x),
-                start.size.y + abs(delta_position.y)
-        }
+            start.size.y + abs(delta_position.y),
         };
+
+        return {outer_position, outer_size};
     }
 
     enum class Position
@@ -55,53 +53,59 @@ namespace
     };
 
     template<typename T>
-    constexpr Position get_position(
+    constexpr Position get_position_target_to_delta(
         aabb::Vector<T> const & start_point,
-        T slope,
+        aabb::Vector<T> const & delta_position,
         aabb::Vector<T> const & target_point
     )
     {
-        auto const result_y = slope * (target_point.x - start_point.x) + start_point.y;
-        if(result_y < target_point.y)
-            return Position::ABOVE;
-        if(result_y > target_point.y)
+        auto const wanted_delta = target_point - start_point;
+
+        auto const a = abs(wanted_delta.x) * delta_position.y;
+        auto const b = wanted_delta.y * abs(delta_position.x);
+
+        if(a > b)
             return Position::BELOW;
 
-        return Position::EQUAL;
+        return (a < b) ? Position::ABOVE : Position::EQUAL;
     }
 
     template<typename T>
     constexpr bool is_above_low_diagonal(
         aabb::Box<T> const & start,
         aabb::Box<T> const & obstacle,
-        T slope
+        aabb::Vector<T> const & delta_position
     )
     {
+        assert(delta_position.x != 0);
+        assert(delta_position.y != 0);
         assert_positive_size(start);
         assert_positive_size(obstacle);
 
-        auto const upwards = slope > 0;
+        auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
         auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
         auto const target_point = upwards ? get_top_left(obstacle) : get_top_right(obstacle);
 
-        return get_position(start_point, slope, target_point) == Position::ABOVE;
+        return get_position_target_to_delta(start_point, delta_position, target_point) == Position::ABOVE;
     }
 
     template<typename T>
     constexpr bool is_below_high_diagonal(
         aabb::Box<T> const & start,
         aabb::Box<T> const & obstacle,
-        T slope
+        aabb::Vector<T> const & delta_position
     )
     {
+        assert(delta_position.x != 0);
+        assert(delta_position.y != 0);
         assert_positive_size(start);
         assert_positive_size(obstacle);
 
-        auto const upwards = slope > 0;
+        auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
         auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
         auto const target_point = upwards ? get_bottom_right(obstacle) : get_bottom_left(obstacle);
 
-        return get_position(start_point, slope, target_point) == Position::BELOW;
+        return get_position_target_to_delta(start_point, delta_position, target_point) == Position::BELOW;
     }
 
     template<typename T>
@@ -112,9 +116,11 @@ namespace
     )
     {
         assert(delta_position.x != 0);
+        assert(delta_position.y != 0);
+        assert_positive_size(start);
+        assert_positive_size(obstacle);
 
-        auto const slope = delta_position.y / delta_position.x;
-        return is_above_low_diagonal(start, obstacle, slope) && is_below_high_diagonal(start, obstacle, slope);
+        return is_above_low_diagonal(start, obstacle, delta_position) && is_below_high_diagonal(start, obstacle, delta_position);
     }
 }
 
@@ -140,9 +146,14 @@ namespace aabb
         assert_positive_size(start);
         assert_positive_size(obstacle);
 
+        if(does_collide(start, obstacle))
+            return true;
+
         auto const outer_box = get_outer_box(start, delta_position);
-        return does_collide(obstacle, outer_box)
-            && (delta_position.x == 0 || delta_position.y == 0 || is_in_limited_area(start, delta_position, obstacle));
+        if(!does_collide(obstacle, outer_box))
+            return false;
+
+        return delta_position.x == 0 || delta_position.y == 0 || is_in_limited_area(start, delta_position, obstacle);
     }
 
     enum EdgeType
@@ -161,6 +172,7 @@ namespace aabb
     )
     {
         assert(!does_collide(start, obstacle));
+
         if(!would_collide(start, delta_position, obstacle))
             return EdgeType::NONE;
 
@@ -172,7 +184,7 @@ namespace aabb
 
         auto const start_point = get_top_right(start);
         auto const target_point = get_bottom_left(obstacle);
-        auto const position = get_position(start_point, delta_position.y / delta_position.x, target_point);
+        auto const position = get_position_target_to_delta(start_point, delta_position, target_point);
         switch(position)
         {
             case Position::BELOW: return EdgeType::VERTICAL;
