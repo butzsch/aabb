@@ -287,6 +287,28 @@ TYPED_TEST_P(CollisionTypeFunction, DetectsHorizontalCollisionOnVerticalMovement
     ASSERT_THAT(get_colliding_edges(start, negative_delta_position, negative_direction_obstacle), Eq(EdgeType::HORIZONTAL));
 }
 
+TYPED_TEST_P(CollisionTypeFunction, DetectsCollisionOfAxisOverlappingBoxes)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {2, 2},
+    };
+
+    static auto constexpr top_right_delta_position = Vector<TypeParam> {10, 10};
+    static auto constexpr top_right_obstacle = Box<TypeParam> {
+        {1, 3},
+        {1, 1},
+    };
+    ASSERT_THAT(get_colliding_edges(start, top_right_delta_position, top_right_obstacle), Eq(EdgeType::HORIZONTAL));
+
+    static auto constexpr top_left_delta_position = Vector<TypeParam> {-10, 10};
+    static auto constexpr top_left_obstacle = Box<TypeParam> {
+        {0, 3},
+        {1, 1},
+    };
+    ASSERT_THAT(get_colliding_edges(start, top_left_delta_position, top_left_obstacle), Eq(EdgeType::HORIZONTAL));
+}
+
 REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     AssertsThatObjectsDontAlreadyCollide,
     DetectsTopRightOnEdgeCollisionAsBoth,
@@ -303,7 +325,8 @@ REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     DetectsTopLeftVerticalCollision,
     DetectsBottomRightOnEdgeCollisionAsBoth,
     DetectsBottomRightHorizontalCollision,
-    DetectsBottomRightVerticalCollision
+    DetectsBottomRightVerticalCollision,
+    DetectsCollisionOfAxisOverlappingBoxes
 );
 
 

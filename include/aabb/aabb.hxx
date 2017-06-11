@@ -223,6 +223,19 @@ namespace aabb
 
         auto const start_point = get_start_point_for_colliding_edges(start, delta_position);
         auto const target_point = get_obstacle_point_for_colliding_edges(obstacle, delta_position);
+
+        if(delta_position.x > 0)
+        {
+            if(target_point.x < start_point.x)
+                return EdgeType::HORIZONTAL;
+        }
+        else
+        {
+            if(target_point.x > start_point.x)
+                return EdgeType::HORIZONTAL;
+        }
+
+
         auto const position = get_position_target_to_delta(start_point, delta_position, target_point);
         auto const upwards = delta_position.y > 0;
         switch(position)
