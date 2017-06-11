@@ -122,6 +122,44 @@ namespace
 
         return is_above_low_diagonal(start, obstacle, delta_position) && is_below_high_diagonal(start, obstacle, delta_position);
     }
+
+    template<typename T>
+    constexpr aabb::Vector<T> get_start_point_for_colliding_edges(aabb::Box<T> const & start, aabb::Vector<T> const & delta_position)
+    {
+        assert(delta_position.x != 0);
+        assert(delta_position.y != 0);
+        auto const upwards = delta_position.y > 0;
+        if(delta_position.x > 0)
+        {
+            if(upwards)
+                return get_top_right(start);
+            else
+                return get_bottom_right(start);
+        }
+        else if(upwards)
+            return get_top_left(start);
+
+        return get_bottom_left(start);
+    }
+
+    template<typename T>
+    constexpr aabb::Vector<T> get_obstacle_point_for_colliding_edges(aabb::Box<T> const & obstacle, aabb::Vector<T> const & delta_position)
+    {
+        assert(delta_position.x != 0);
+        assert(delta_position.y != 0);
+        auto const upwards = delta_position.y > 0;
+        if(delta_position.x > 0)
+        {
+            if(upwards)
+                return get_bottom_left(obstacle);
+            else
+                return get_top_left(obstacle);
+        }
+        else if(upwards)
+            return get_bottom_right(obstacle);
+
+        return get_top_right(obstacle);
+    }
 }
 
 namespace aabb
@@ -182,13 +220,15 @@ namespace aabb
         if(delta_position.y == 0)
             return EdgeType::VERTICAL;
 
-        auto const start_point = get_top_right(start);
-        auto const target_point = get_bottom_left(obstacle);
+
+        auto const start_point = get_start_point_for_colliding_edges(start, delta_position);
+        auto const target_point = get_obstacle_point_for_colliding_edges(obstacle, delta_position);
         auto const position = get_position_target_to_delta(start_point, delta_position, target_point);
+        auto const upwards = delta_position.y > 0;
         switch(position)
         {
-            case Position::BELOW: return EdgeType::VERTICAL;
-            case Position::ABOVE: return EdgeType::HORIZONTAL;
+            case Position::BELOW: return upwards ? EdgeType::VERTICAL : EdgeType::HORIZONTAL;
+            case Position::ABOVE: return upwards ? EdgeType::HORIZONTAL : EdgeType::VERTICAL;
             case Position::EQUAL: return EdgeType::BOTH;
         }
     }

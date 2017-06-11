@@ -99,6 +99,150 @@ TYPED_TEST_P(CollisionTypeFunction, DetectsTopRightVerticallCollision)
     ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::VERTICAL));
 }
 
+TYPED_TEST_P(CollisionTypeFunction, DetectsBottomLeftOnEdgeCollisionAsBoth)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {-10, -10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-5, -5},
+        {1, 1},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::BOTH));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsBottomLeftHorizontalCollision)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {-10, -10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-5, -5},
+        {2, 1},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::HORIZONTAL));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsBottomLeftVerticalCollision)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {-10, -10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-5, -5},
+        {1, 2},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::VERTICAL));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsTopLeftOnEdgeCollisionAsBoth)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {-10, 10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-5, 5},
+        {1, 1},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::BOTH));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsTopLeftHorizontalCollision)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {-10, 10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-5, 5},
+        {3, 1},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::HORIZONTAL));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsTopLeftVerticalCollision)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {-10, 10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-7, 5},
+        {1, 10},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::VERTICAL));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsBottomRightOnEdgeCollisionAsBoth)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {10, -10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {5, -5},
+        {1, 1},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::BOTH));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsBottomRightHorizontalCollision)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {10, -10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {3, -5},
+        {5, 1},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::HORIZONTAL));
+}
+
+TYPED_TEST_P(CollisionTypeFunction, DetectsBottomRightVerticalCollision)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+    static auto constexpr delta_position = Vector<TypeParam> {10, -10};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {5, -7},
+        {1, 5},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::VERTICAL));
+}
+
 TYPED_TEST_P(CollisionTypeFunction, DetectsVerticalCollisionOnHorizontalMovement)
 {
     static auto constexpr size = Vector<TypeParam> {2, 2};
@@ -150,7 +294,16 @@ REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     DetectsTopRightHorizontalCollision,
     DetectsTopRightVerticallCollision,
     DetectsVerticalCollisionOnHorizontalMovement,
-    DetectsHorizontalCollisionOnVerticalMovement
+    DetectsHorizontalCollisionOnVerticalMovement,
+    DetectsBottomLeftOnEdgeCollisionAsBoth,
+    DetectsBottomLeftHorizontalCollision,
+    DetectsBottomLeftVerticalCollision,
+    DetectsTopLeftOnEdgeCollisionAsBoth,
+    DetectsTopLeftHorizontalCollision,
+    DetectsTopLeftVerticalCollision,
+    DetectsBottomRightOnEdgeCollisionAsBoth,
+    DetectsBottomRightHorizontalCollision,
+    DetectsBottomRightVerticalCollision
 );
 
 
