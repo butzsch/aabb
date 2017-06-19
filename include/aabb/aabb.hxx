@@ -88,6 +88,17 @@ namespace aabb
             auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
             auto const target_point = upwards ? get_top_left(obstacle) : get_top_right(obstacle);
 
+            if(delta_position.x > 0)
+            {
+                if(target_point.x < start_point.x)
+                    return true;
+            }
+            else
+            {
+                if(target_point.x > start_point.x)
+                    return true;
+            }
+
             return get_position_target_to_delta(start_point, delta_position, target_point) == Position::ABOVE;
         }
 
@@ -106,6 +117,17 @@ namespace aabb
             auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
             auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
             auto const target_point = upwards ? get_bottom_right(obstacle) : get_bottom_left(obstacle);
+
+            if(delta_position.x > 0)
+            {
+                if(target_point.x < start_point.x)
+                    return true;
+            }
+            else
+            {
+                if(target_point.x > start_point.x)
+                    return true;
+            }
 
             return get_position_target_to_delta(start_point, delta_position, target_point) == Position::BELOW;
         }
