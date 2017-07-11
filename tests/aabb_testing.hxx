@@ -8,4 +8,4 @@ namespace aabb_testing
     using types_to_test = testing::Types<int, double>;
 }
 
-#endif AABB_AABB_TESTING_HXX_INC
+#endif // AABB_AABB_TESTING_HXX_INC
