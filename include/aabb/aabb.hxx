@@ -257,12 +257,11 @@ namespace aabb
 
         auto const position = detail::get_position_target_to_delta(start_point, delta_position, target_point);
         auto const upwards = delta_position.y > 0;
-        switch(position)
-        {
-            case detail::Position::BELOW: return upwards ? EdgeType::VERTICAL : EdgeType::HORIZONTAL;
-            case detail::Position::ABOVE: return upwards ? EdgeType::HORIZONTAL : EdgeType::VERTICAL;
-            case detail::Position::EQUAL: return EdgeType::BOTH;
-        }
+        if(position == detail::Position::BELOW)
+            return upwards ? EdgeType::VERTICAL : EdgeType::HORIZONTAL;
+        if(position == detail::Position::ABOVE)
+            return upwards ? EdgeType::HORIZONTAL : EdgeType::VERTICAL;
+        return EdgeType::BOTH;
     }
 }
 
