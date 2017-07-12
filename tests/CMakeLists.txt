@@ -27,3 +27,14 @@ target_include_directories(aabb_collision_type_detection_test_command PRIVATE "$
 target_link_libraries(aabb_collision_type_detection_test_command gmock gtest)
 
 add_test(NAME aabb_collision_type_detection_test COMMAND aabb_collision_type_detection_test_command)
+
+foreach(test_target aabb_move_collision aabb_move_collision aabb_collision_type_detection)
+    set(target_command "${test_target}_test_command")
+    if(MSVC)
+        target_compile_options(${target_command} PRIVATE "/W")
+    else()
+        target_compile_options(${target_command} PRIVATE "-Wall")
+        target_compile_options(${target_command} PRIVATE "-Wextra")
+    endif()
+endforeach(test_target)
+
