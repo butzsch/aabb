@@ -111,7 +111,7 @@ TYPED_TEST_P(MoveCollisionFunction, ReturnsThatObstaclesBelowBottomLeftDiagonalA
     ASSERT_FALSE(would_collide(start, delta_position, below_middle_obstacle));
 
     static auto constexpr above_middle_obstacle = Box<TypeParam> {Vector<TypeParam> { 0, 1 }, size};
-    ASSERT_FALSE(would_collide(start, delta_position, below_middle_obstacle));
+    ASSERT_FALSE(would_collide(start, delta_position, above_middle_obstacle));
 }
 
 TYPED_TEST_P(MoveCollisionFunction, ReturnsThatObstaclesAboveBottomLeftDiagonalAreaDontCollide)
