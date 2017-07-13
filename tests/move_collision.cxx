@@ -250,6 +250,44 @@ TYPED_TEST_P(MoveCollisionFunction, WorksWithFlatMovement)
     ASSERT_TRUE(would_collide(start, delta_position, obstacle));
 }
 
+TYPED_TEST_P(MoveCollisionFunction, WorksWithTopSpanningObstacle)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+
+    static auto constexpr top_obstacle = Box<TypeParam> {
+        {-10, 5},
+        {50, 1},
+    };
+
+    static auto constexpr top_right_delta_position = Vector<TypeParam> {10, 10};
+    ASSERT_TRUE(would_collide(start, top_right_delta_position, top_obstacle));
+
+    static auto constexpr top_left_delta_position = Vector<TypeParam> {-10, 10};
+    ASSERT_TRUE(would_collide(start, top_left_delta_position, top_obstacle));
+}
+
+TYPED_TEST_P(MoveCollisionFunction, WorksWithBottomSpanningObstacle)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {1, 1},
+    };
+
+    static auto constexpr bottom_obstacle = Box<TypeParam> {
+        {-10, -5},
+        {50, 1},
+    };
+
+    static auto constexpr bottom_right_delta_position = Vector<TypeParam> {10, -10};
+    ASSERT_TRUE(would_collide(start, bottom_right_delta_position, bottom_obstacle));
+
+    static auto constexpr bottom_left_delta_position = Vector<TypeParam> {-10, -10};
+    ASSERT_TRUE(would_collide(start, bottom_left_delta_position, bottom_obstacle));
+}
+
 REGISTER_TYPED_TEST_CASE_P(MoveCollisionFunction,
     ReturnsThatIdenticalDestinationAndObstacleCollide,
     ReturnsThatObstaclesOutsideTopRightOuterBoundingBoxDontCollide,
@@ -265,7 +303,9 @@ REGISTER_TYPED_TEST_CASE_P(MoveCollisionFunction,
     ReturnsThatObstaclesAboveTopLeftDiagonalAreaDontCollide,
     ProcessesHorizontalMovement,
     ProcessesVerticalMovement,
-    WorksWithFlatMovement
+    WorksWithFlatMovement,
+    WorksWithTopSpanningObstacle,
+    WorksWithBottomSpanningObstacle
 );
 
 INSTANTIATE_TYPED_TEST_CASE_P(MoveCollsionFunctionTest, MoveCollisionFunction, aabb_testing::types_to_test);
