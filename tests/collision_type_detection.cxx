@@ -309,6 +309,23 @@ TYPED_TEST_P(CollisionTypeFunction, DetectsCollisionOfAxisOverlappingBoxes)
     ASSERT_THAT(get_colliding_edges(start, top_left_delta_position, top_left_obstacle), Eq(EdgeType::HORIZONTAL));
 }
 
+TYPED_TEST_P(CollisionTypeFunction, DetectsCollisionOnTouchingBoxesCorrectly)
+{
+    static auto constexpr start = Box<TypeParam> {
+        {0, 0},
+        {2, 2},
+    };
+
+    static auto constexpr delta_position = Vector<TypeParam> {-1, 1};
+
+    static auto constexpr obstacle = Box<TypeParam> {
+        {-2, 0},
+        {2, 2},
+    };
+
+    ASSERT_THAT(get_colliding_edges(start, delta_position, obstacle), Eq(EdgeType::VERTICAL));
+}
+
 REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     AssertsThatObjectsDontAlreadyCollide,
     DetectsTopRightOnEdgeCollisionAsBoth,
@@ -326,7 +343,8 @@ REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     DetectsBottomRightOnEdgeCollisionAsBoth,
     DetectsBottomRightHorizontalCollision,
     DetectsBottomRightVerticalCollision,
-    DetectsCollisionOfAxisOverlappingBoxes
+    DetectsCollisionOfAxisOverlappingBoxes,
+    DetectsCollisionOnTouchingBoxesCorrectly
 );
 
 

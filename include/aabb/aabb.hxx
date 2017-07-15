@@ -88,8 +88,16 @@ namespace aabb
             auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
             auto const target_point = upwards ? get_top_left(obstacle) : get_top_right(obstacle);
 
-            if((delta_position.x > 0) == (target_point.x < start_point.x))
-                return true;
+            if(delta_position.x > 0)
+            {
+                if(target_point.x < start_point.x)
+                    return true;
+            }
+            else
+            {
+                if(target_point.x > start_point.x)
+                    return true;
+            }
 
             return get_position_target_to_delta(start_point, delta_position, target_point) == Position::ABOVE;
         }
@@ -110,8 +118,16 @@ namespace aabb
             auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
             auto const target_point = upwards ? get_bottom_right(obstacle) : get_bottom_left(obstacle);
 
-            if((delta_position.x > 0) == (target_point.x < start_point.x))
-                return true;
+            if(delta_position.x > 0)
+            {
+                if(target_point.x < start_point.x)
+                    return true;
+            }
+            else
+            {
+                if(target_point.x > start_point.x)
+                    return true;
+            }
 
             return get_position_target_to_delta(start_point, delta_position, target_point) == Position::BELOW;
         }
@@ -141,11 +157,13 @@ namespace aabb
             {
                 if(upwards)
                     return get_top_right(start);
-                else
-                    return get_bottom_right(start);
+
+                return get_bottom_right(start);
             }
             else if(upwards)
+            {
                 return get_top_left(start);
+            }
 
             return get_bottom_left(start);
         }
@@ -224,14 +242,23 @@ namespace aabb
 
         if(delta_position.x == 0)
             return EdgeType::HORIZONTAL;
-
         if(delta_position.y == 0)
             return EdgeType::VERTICAL;
+
         auto const start_point = detail::get_start_point_for_colliding_edges(start, delta_position);
         auto const target_point = detail::get_obstacle_point_for_colliding_edges(obstacle, delta_position);
 
-        if((delta_position.x > 0) == (target_point.x < start_point.x))
-            return EdgeType::HORIZONTAL;
+        if(delta_position.x > 0)
+        {
+            if(target_point.x < start_point.x)
+                return EdgeType::HORIZONTAL;
+        }
+        else
+        {
+            if(target_point.x > start_point.x)
+                return EdgeType::HORIZONTAL;
+        }
+
 
         auto const position = detail::get_position_target_to_delta(start_point, delta_position, target_point);
         auto const upwards = delta_position.y > 0;
