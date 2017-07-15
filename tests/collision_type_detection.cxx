@@ -347,5 +347,4 @@ REGISTER_TYPED_TEST_CASE_P(CollisionTypeFunction,
     DetectsCollisionOnTouchingBoxesCorrectly
 );
 
-
 INSTANTIATE_TYPED_TEST_CASE_P(CollsionTypeFunctionTest, CollisionTypeFunction, aabb_testing::types_to_test);

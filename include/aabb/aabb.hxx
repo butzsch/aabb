@@ -259,7 +259,6 @@ namespace aabb
                 return EdgeType::HORIZONTAL;
         }
 
-
         auto const position = detail::get_position_target_to_delta(start_point, delta_position, target_point);
         auto const upwards = delta_position.y > 0;
         if(position == detail::Position::BELOW)
