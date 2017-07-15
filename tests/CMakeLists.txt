@@ -31,7 +31,7 @@ add_test(NAME aabb_collision_type_detection_test COMMAND aabb_collision_type_det
 foreach(test_target aabb_move_collision aabb_move_collision aabb_collision_type_detection)
     set(target_command "${test_target}_test_command")
     if(MSVC)
-        target_compile_options(${target_command} PRIVATE "/W")
+        target_compile_options(${target_command} PRIVATE "/W4")
     else()
         target_compile_options(${target_command} PRIVATE "-Wall")
         target_compile_options(${target_command} PRIVATE "-Wextra")
