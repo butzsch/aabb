@@ -18,13 +18,6 @@ namespace aabb
         }
 
         template<typename T>
-        constexpr void assert_positive_size(Box<T> const & x)
-        {
-            assert(x.size.x > 0);
-            assert(x.size.y > 0);
-        }
-
-        template<typename T>
         constexpr T abs(T x)
         {
             return x < 0 ? -x : x;
@@ -33,18 +26,14 @@ namespace aabb
         template<typename T>
         constexpr Box<T> get_outer_box(Box<T> const & start, Vector<T> const & delta_position)
         {
-            assert_positive_size(start);
+            auto const destination = plus_position(start, delta_position);
 
-            auto const outer_position = Vector<T> {
-                start.position.x + std::min(delta_position.x, static_cast<T>(0)),
-                start.position.y + std::min(delta_position.y, static_cast<T>(0)),
-            };
-            auto const outer_size = Vector<T> {
-                start.size.x + abs(delta_position.x),
-                start.size.y + abs(delta_position.y),
-            };
+            auto const outer_left = std::min(get_left(start), get_left(destination));
+            auto const outer_right = std::max(get_right(start), get_right(destination));
+            auto const outer_top = std::max(get_top(start), get_top(destination));
+            auto const outer_bottom = std::min(get_bottom(start), get_bottom(destination));
 
-            return {outer_position, outer_size};
+            return box_from_edges(outer_left, outer_bottom, outer_right, outer_top);
         }
 
         enum class Position
@@ -81,8 +70,6 @@ namespace aabb
         {
             assert(delta_position.x != 0);
             assert(delta_position.y != 0);
-            assert_positive_size(start);
-            assert_positive_size(obstacle);
 
             auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
             auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
@@ -111,8 +98,6 @@ namespace aabb
         {
             assert(delta_position.x != 0);
             assert(delta_position.y != 0);
-            assert_positive_size(start);
-            assert_positive_size(obstacle);
 
             auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
             auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
@@ -141,8 +126,6 @@ namespace aabb
         {
             assert(delta_position.x != 0);
             assert(delta_position.y != 0);
-            assert_positive_size(start);
-            assert_positive_size(obstacle);
 
             return is_above_low_diagonal(start, obstacle, delta_position) && is_below_high_diagonal(start, obstacle, delta_position);
         }
@@ -193,9 +176,6 @@ namespace aabb
     template<typename T>
     constexpr bool does_collide(Box<T> const & a, Box<T> const & b)
     {
-        detail::assert_positive_size(a);
-        detail::assert_positive_size(b);
-
         return detail::does_collide_on_axis(get_left(a), get_right(a), get_left(b), get_right(b))
             && detail::does_collide_on_axis(get_bottom(a), get_top(a), get_bottom(b), get_top(b));
     }
@@ -207,9 +187,6 @@ namespace aabb
         Box<T> const & obstacle
     )
     {
-        detail::assert_positive_size(start);
-        detail::assert_positive_size(obstacle);
-
         if(does_collide(start, obstacle))
             return true;
 

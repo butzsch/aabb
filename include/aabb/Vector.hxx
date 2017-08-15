@@ -32,10 +32,9 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> operator + (Vector<T> const & a, Vector<T> const & b)
+    constexpr Vector<T> operator + (Vector<T> a, Vector<T> const & b)
     {
-        auto summand = a;
-        return summand += b;
+        return a += b;
     }
 
     template<typename T>
@@ -48,10 +47,9 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> operator - (Vector<T> const & a, Vector<T> const & b)
+    constexpr Vector<T> operator - (Vector<T> a, Vector<T> const & b)
     {
-        auto minuend = a;
-        return minuend -= b;
+        return a -= b;
     }
 
     template<typename T>
@@ -64,10 +62,9 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> operator * (Vector<T> const & a, T b)
+    constexpr Vector<T> operator * (Vector<T> a, T b)
     {
-        auto factor = a;
-        return factor *= b;
+        return a *= b;
     }
 
     template<typename T>
@@ -80,10 +77,9 @@ namespace aabb
     }
 
     template<typename T>
-    constexpr Vector<T> operator / (Vector<T> const & a, T b)
+    constexpr Vector<T> operator / (Vector<T> a, T b)
     {
-        auto dividend = a;
-        return dividend /= b;
+        return a /= b;
     }
 }
 
