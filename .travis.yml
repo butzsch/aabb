@@ -12,6 +12,8 @@ addons:
    - cmake
 
 script:
+ - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
+ - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
  - mkdir build
  - cd build
  - cmake -DAABB_BUILD_TESTS=ON ..
