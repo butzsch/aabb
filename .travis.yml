@@ -1,7 +1,9 @@
 dist: trusty
 sudo: required
 language: cpp
-compiler: gcc
+compiler:
+ - clang
+ - gcc
 addons:
  apt:
   sources:
@@ -19,3 +21,4 @@ script:
  - cmake -DAABB_BUILD_TESTS=ON ..
  - make
  - make test
+
