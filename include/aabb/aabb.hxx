@@ -63,8 +63,8 @@ namespace aabb
             assert(bottom < top);
 
             return {
-                Vector<T> {left, bottom},
-                    Vector<T> {right - left, top - bottom}
+                {left, bottom},
+                {right - left, top - bottom}
             };
         }
 
