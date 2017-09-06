@@ -4,9 +4,6 @@
 #include <algorithm>
 #include <cassert>
 
-#include "Box.hxx"
-#include "Vector.hxx"
-
 namespace aabb
 {
     namespace detail
@@ -23,8 +20,8 @@ namespace aabb
             return x < 0 ? -x : x;
         }
 
-        template<typename T>
-        constexpr Box<T> get_outer_box(Box<T> const & start, Vector<T> const & delta_position)
+        template<typename Box, typename Vector>
+        constexpr auto get_outer_box(Box const & start, Vector const & delta_position)
         {
             auto const destination = plus_position(start, delta_position);
 
@@ -43,11 +40,11 @@ namespace aabb
             EQUAL
         };
 
-        template<typename T>
+        template<typename Vector>
         constexpr Position get_position_target_to_delta(
-            Vector<T> const & start_point,
-            Vector<T> const & delta_position,
-            Vector<T> const & target_point
+            Vector const & start_point,
+            Vector const & delta_position,
+            Vector const & target_point
         )
         {
             auto const wanted_delta = target_point - start_point;
@@ -61,11 +58,11 @@ namespace aabb
             return (a < b) ? Position::ABOVE : Position::EQUAL;
         }
 
-        template<typename T>
+        template<typename Box, typename Vector>
         constexpr bool is_above_low_diagonal(
-            Box<T> const & start,
-            Box<T> const & obstacle,
-            Vector<T> const & delta_position
+            Box const & start,
+            Box const & obstacle,
+            Vector const & delta_position
         )
         {
             assert(delta_position.x != 0);
@@ -89,11 +86,11 @@ namespace aabb
             return get_position_target_to_delta(start_point, delta_position, target_point) == Position::ABOVE;
         }
 
-        template<typename T>
+        template<typename Box, typename Vector>
         constexpr bool is_below_high_diagonal(
-            Box<T> const & start,
-            Box<T> const & obstacle,
-            Vector<T> const & delta_position
+            Box const & start,
+            Box const & obstacle,
+            Vector const & delta_position
         )
         {
             assert(delta_position.x != 0);
@@ -117,11 +114,11 @@ namespace aabb
             return get_position_target_to_delta(start_point, delta_position, target_point) == Position::BELOW;
         }
 
-        template<typename T>
+        template<typename Box, typename Vector>
         constexpr bool is_in_limited_area(
-            Box<T> const & start,
-            Vector<T> const & delta_position,
-            Box<T> const & obstacle
+            Box const & start,
+            Vector const & delta_position,
+            Box const & obstacle
         )
         {
             assert(delta_position.x != 0);
@@ -130,8 +127,8 @@ namespace aabb
             return is_above_low_diagonal(start, obstacle, delta_position) && is_below_high_diagonal(start, obstacle, delta_position);
         }
 
-        template<typename T>
-        constexpr Vector<T> get_start_point_for_colliding_edges(Box<T> const & start, Vector<T> const & delta_position)
+        template<typename Box, typename Vector>
+        constexpr auto get_start_point_for_colliding_edges(Box const & start, Vector const & delta_position)
         {
             assert(delta_position.x != 0);
             assert(delta_position.y != 0);
@@ -151,8 +148,8 @@ namespace aabb
             return get_bottom_left(start);
         }
 
-        template<typename T>
-        constexpr Vector<T> get_obstacle_point_for_colliding_edges(Box<T> const & obstacle, Vector<T> const & delta_position)
+        template<typename Box, typename Vector>
+        constexpr auto get_obstacle_point_for_colliding_edges(Box const & obstacle, Vector const & delta_position)
         {
             assert(delta_position.x != 0);
             assert(delta_position.y != 0);
@@ -173,18 +170,18 @@ namespace aabb
         }
     }
 
-    template<typename T>
-    constexpr bool does_collide(Box<T> const & a, Box<T> const & b)
+    template<typename Box>
+    constexpr bool does_collide(Box const & a, Box const & b)
     {
         return detail::does_collide_on_axis(get_left(a), get_right(a), get_left(b), get_right(b))
             && detail::does_collide_on_axis(get_bottom(a), get_top(a), get_bottom(b), get_top(b));
     }
 
-    template<typename T>
+    template<typename Box, typename Vector>
     constexpr bool would_collide(
-        Box<T> const & start,
-        Vector<T> const & delta_position,
-        Box<T> const & obstacle
+        Box const & start,
+        Vector const & delta_position,
+        Box const & obstacle
     )
     {
         if(does_collide(start, obstacle))
@@ -205,11 +202,11 @@ namespace aabb
         BOTH = HORIZONTAL | VERTICAL
     };
 
-    template<typename T>
+    template<typename Box, typename Vector>
     constexpr EdgeType get_colliding_edges(
-        Box<T> const & start,
-        Vector<T> const & delta_position,
-        Box<T> const & obstacle
+        Box const & start,
+        Vector const & delta_position,
+        Box const & obstacle
     )
     {
         assert(!does_collide(start, obstacle));
