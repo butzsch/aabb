@@ -14,18 +14,6 @@ namespace aabb
         Vector<T> position;
         Vector<T> size;
     };
-
-    template<typename T>
-    constexpr Box<T> box_from_edges(T left, T bottom, T right, T top)
-    {
-        assert(left < right);
-        assert(bottom < top);
-
-        return Box<T> {
-            Vector<T> {left, bottom},
-            Vector<T> {right - left, top - bottom}
-        };
-    }
 }
 
 #endif // AABB_BOX_HXX_INC

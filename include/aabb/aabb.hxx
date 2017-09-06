@@ -56,6 +56,18 @@ namespace aabb
             return {get_right(box), get_bottom(box)};
         }
 
+        template<typename Box, typename T>
+        constexpr Box box_from_edges(T left, T bottom, T right, T top)
+        {
+            assert(left < right);
+            assert(bottom < top);
+
+            return {
+                Vector<T> {left, bottom},
+                    Vector<T> {right - left, top - bottom}
+            };
+        }
+
         template<typename Box, typename Vector>
         constexpr auto plus_position(Box box, Vector const & delta_position)
         {
@@ -86,7 +98,7 @@ namespace aabb
             auto const outer_top = std::max(get_top(start), get_top(destination));
             auto const outer_bottom = std::min(get_bottom(start), get_bottom(destination));
 
-            return box_from_edges(outer_left, outer_bottom, outer_right, outer_top);
+            return box_from_edges<Box>(outer_left, outer_bottom, outer_right, outer_top);
         }
 
         enum class Position
