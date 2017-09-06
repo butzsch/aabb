@@ -8,6 +8,62 @@ namespace aabb
 {
     namespace detail
     {
+        template<typename Box>
+        constexpr auto get_left(Box const & box)
+        {
+            return box.position.x + std::min(box.size.y, static_cast<decltype(box.size.y)>(0));
+        }
+
+        template<typename Box>
+        constexpr auto get_right(Box const & box)
+        {
+            return box.position.x + std::max(box.size.x, static_cast<decltype(box.size.x)>(0));
+        }
+
+        template<typename Box>
+        constexpr auto get_bottom(Box const & box)
+        {
+            return box.position.y + std::min(box.size.y, static_cast<decltype(box.size.y)>(0));
+        }
+
+        template<typename Box>
+        constexpr auto get_top(Box const & box)
+        {
+            return box.position.y + std::max(box.size.y, static_cast<decltype(box.size.x)>(0));
+        }
+
+        template<typename Box>
+        constexpr auto get_top_left(Box const & box) -> decltype(box.position)
+        {
+            return {get_left(box), get_top(box)};
+        }
+
+        template<typename Box>
+        constexpr auto get_top_right(Box const & box) -> decltype(box.position)
+        {
+            return {get_right(box), get_top(box)};
+        }
+
+        template<typename Box>
+        constexpr auto get_bottom_left(Box const & box) -> decltype(box.position)
+        {
+            return {get_left(box), get_bottom(box)};
+        }
+
+        template<typename Box>
+        constexpr auto get_bottom_right(Box const & box) -> decltype(box.position)
+        {
+            return {get_right(box), get_bottom(box)};
+        }
+
+        template<typename Box, typename Vector>
+        constexpr auto plus_position(Box box, Vector const & delta_position)
+        {
+            box.position += delta_position;
+
+            return box;
+        }
+
         template<typename T>
         constexpr bool does_collide_on_axis(T a_low, T a_high, T b_low, T b_high)
         {
@@ -173,8 +229,8 @@ namespace aabb
     template<typename Box>
     constexpr bool does_collide(Box const & a, Box const & b)
     {
-        return detail::does_collide_on_axis(get_left(a), get_right(a), get_left(b), get_right(b))
-            && detail::does_collide_on_axis(get_bottom(a), get_top(a), get_bottom(b), get_top(b));
+        return detail::does_collide_on_axis(detail::get_left(a), detail::get_right(a), detail::get_left(b), detail::get_right(b))
+            && detail::does_collide_on_axis(detail::get_bottom(a), detail::get_top(a), detail::get_bottom(b), detail::get_top(b));
     }
 
     template<typename Box, typename Vector>
