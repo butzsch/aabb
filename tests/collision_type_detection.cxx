@@ -2,11 +2,10 @@
 #include <gtest/gtest.h>
 
 #include "aabb/aabb.hxx"
-#include "aabb/Box.hxx"
-#include "aabb/Vector.hxx"
 #include "aabb_testing.hxx"
 
 using namespace aabb;
+using namespace aabb_testing;
 using namespace testing;
 
 template<typename T>
