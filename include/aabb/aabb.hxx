@@ -11,7 +11,7 @@ namespace aabb
         template<typename Box>
         constexpr auto get_left(Box const & box)
         {
-            return box.position.x + std::min(box.size.y, static_cast<decltype(box.size.y)>(0));
+            return box.position.x + std::min(box.size.x, static_cast<decltype(box.size.x)>(0));
         }
 
         template<typename Box>
