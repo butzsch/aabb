@@ -8,6 +8,6 @@ build_script:
 
     cmake .. -G "Visual Studio 15"
 
-    cmake --build --config "Debug"
-    
+    cmake --build . --config "Debug"
+
     ctest
