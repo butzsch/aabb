@@ -2,12 +2,14 @@ image:
   - Visual Studio 2017
 build_script:
 - cmd: >-
-    mkdir build
+  git submodule update --init
 
-    cd build
+  mkdir build
 
-    cmake -DAABB_BUILD_TESTS=ON .. -G "Visual Studio 15"
+  cd build
 
-    cmake --build . --config "Debug"
+  cmake -DAABB_BUILD_TESTS=ON .. -G "Visual Studio 15"
 
-    ctest
+  cmake --build . --config "Debug"
+
+  ctest
