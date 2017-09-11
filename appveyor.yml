@@ -8,7 +8,7 @@ build_script:
 
     cd build
 
-    cmake -DAABB_BUILD_TESTS=ON .. -G "Visual Studio 15"
+    cmake -DAABB_BUILD_TESTS=ON -Dgtest_force_shared_crt=ON .. -G "Visual Studio 15"
 
     cmake --build . --config "Debug"
 
