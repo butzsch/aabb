@@ -56,8 +56,8 @@ namespace aabb_testing
     template<typename T>
     constexpr Vector<T> & operator += (Vector<T> & a, Vector<T> const & b)
     {
-        a.x() += b.x();
-        a.y() += b.y();
+        a.x() = a.x() + b.x();
+        a.y() = a.y() + b.y();
 
         return a;
     }
@@ -71,8 +71,8 @@ namespace aabb_testing
     template<typename T>
     constexpr Vector<T> & operator -= (Vector<T> & a, Vector<T> const & b)
     {
-        a.x() -= b.x();
-        a.y() -= b.y();
+        a.x() = a.x() - b.x();
+        a.y() = a.y() - b.y();
 
         return a;
     }
@@ -84,10 +84,10 @@ namespace aabb_testing
     }
 
     template<typename T>
-    constexpr Vector<T> & operator *= (Vector<T> & a, T b)
+    constexpr Vector<T> & operator *= (Vector<T> & a, T const b)
     {
-        a.x() *= b;
-        a.y() *= b;
+        a.x() = a.x() * b;
+        a.y() = a.y() * b;
 
         return a;
     }
@@ -99,10 +99,10 @@ namespace aabb_testing
     }
 
     template<typename T>
-    constexpr Vector<T> & operator /= (Vector<T> & a, T b)
+    constexpr Vector<T> & operator /= (Vector<T> & a, T const b)
     {
-        a.x() /= b;
-        a.y() /= b;
+        a.x() = a.x() / b;
+        a.y() = a.y() / b;
 
         return a;
     }
