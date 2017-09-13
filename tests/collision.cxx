@@ -25,7 +25,7 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatIdenticalRectanglesCollide)
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallShiftedRectanglesDontCollide)
 {
-    static auto constexpr y = 0;
+    static auto constexpr y = static_cast<TypeParam>(0);
     static auto constexpr size = Vector<TypeParam> {1, 1};
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { 0, y }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { 5, y }, size};
@@ -36,7 +36,7 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallShiftedRectanglesDontColli
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyShiftedRectanglesDontCollide)
 {
-    static auto constexpr x = 0;
+    static auto constexpr x = static_cast<TypeParam>(0);
     static auto constexpr size = Vector<TypeParam> {1, 1};
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { x, 0 }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { x, 5 }, size};
@@ -47,7 +47,7 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyShiftedRectanglesDontCollid
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallyOverlappingRectanglesCollide)
 {
-    static auto constexpr y = 5;
+    static auto constexpr y = static_cast<TypeParam>(5);
     static auto constexpr size = Vector<TypeParam> {2, 2};
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { 0, y }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { 1, y }, size};
@@ -58,7 +58,7 @@ TYPED_TEST_P(CollisionFunction, ReturnsThatHorizontallyOverlappingRectanglesColl
 
 TYPED_TEST_P(CollisionFunction, ReturnsThatVerticallyOverlappingRectanglesCollide)
 {
-    static auto constexpr x = 5;
+    static auto constexpr x = static_cast<TypeParam>(5);
     static auto constexpr size = Vector<TypeParam> {2, 2};
     static auto constexpr a = Box<TypeParam> {Vector<TypeParam> { x, 0 }, size};
     static auto constexpr b = Box<TypeParam> {Vector<TypeParam> { x, 1 }, size};

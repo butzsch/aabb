@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <type_traits>
 
 namespace aabb
 {
@@ -11,47 +12,55 @@ namespace aabb
         template<typename Box>
         constexpr auto get_left(Box const & box)
         {
-            return box.position.x + std::min(box.size.x, static_cast<decltype(box.size.x)>(0));
+            auto const width = box.size().x();
+
+            return box.position().x() + std::min(width, static_cast<decltype(width)>(0));
         }
 
         template<typename Box>
         constexpr auto get_right(Box const & box)
         {
-            return box.position.x + std::max(box.size.x, static_cast<decltype(box.size.x)>(0));
+            auto const width = box.size().x();
+
+            return box.position().x() + std::max(width, static_cast<decltype(width)>(0));
         }
 
         template<typename Box>
         constexpr auto get_bottom(Box const & box)
         {
-            return box.position.y + std::min(box.size.y, static_cast<decltype(box.size.y)>(0));
+            auto const height = box.size().y();
+
+            return box.position().y() + std::min(height, static_cast<decltype(height)>(0));
         }
 
         template<typename Box>
         constexpr auto get_top(Box const & box)
         {
-            return box.position.y + std::max(box.size.y, static_cast<decltype(box.size.x)>(0));
+            auto const height = box.size().y();
+
+            return box.position().y() + std::max(height, static_cast<decltype(height)>(0));
         }
 
         template<typename Box>
-        constexpr auto get_top_left(Box const & box) -> decltype(box.position)
+        constexpr auto get_top_left(Box const & box) -> std::remove_reference_t<decltype(box.position())>
         {
             return {get_left(box), get_top(box)};
         }
 
         template<typename Box>
-        constexpr auto get_top_right(Box const & box) -> decltype(box.position)
+        constexpr auto get_top_right(Box const & box) -> std::remove_reference_t<decltype(box.position())>
         {
             return {get_right(box), get_top(box)};
         }
 
         template<typename Box>
-        constexpr auto get_bottom_left(Box const & box) -> decltype(box.position)
+        constexpr auto get_bottom_left(Box const & box) ->std::remove_reference_t<decltype(box.position())>
         {
             return {get_left(box), get_bottom(box)};
         }
 
         template<typename Box>
-        constexpr auto get_bottom_right(Box const & box) -> decltype(box.position)
+        constexpr auto get_bottom_right(Box const & box) -> std::remove_reference_t<decltype(box.position())>
         {
             return {get_right(box), get_bottom(box)};
         }
@@ -71,7 +80,7 @@ namespace aabb
         template<typename Box, typename Vector>
         constexpr auto plus_position(Box box, Vector const & delta_position)
         {
-            box.position += delta_position;
+            box.position() += delta_position;
 
             return box;
         }
@@ -117,8 +126,8 @@ namespace aabb
         {
             auto const wanted_delta = target_point - start_point;
 
-            auto const a = abs(wanted_delta.x) * delta_position.y;
-            auto const b = wanted_delta.y * abs(delta_position.x);
+            auto const a = abs(wanted_delta.x()) * delta_position.y();
+            auto const b = wanted_delta.y() * abs(delta_position.x());
 
             if(a > b)
                 return Position::BELOW;
@@ -133,21 +142,21 @@ namespace aabb
             Vector const & delta_position
         )
         {
-            assert(delta_position.x != 0);
-            assert(delta_position.y != 0);
+            assert(delta_position.x() != 0);
+            assert(delta_position.y() != 0);
 
-            auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
+            auto const upwards = (delta_position.x() > 0) == (delta_position.y() > 0);
             auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
             auto const target_point = upwards ? get_top_left(obstacle) : get_top_right(obstacle);
 
-            if(delta_position.x > 0)
+            if(delta_position.x() > 0)
             {
-                if(target_point.x < start_point.x)
+                if(target_point.x() < start_point.x())
                     return true;
             }
             else
             {
-                if(target_point.x > start_point.x)
+                if(target_point.x() > start_point.x())
                     return true;
             }
 
@@ -161,21 +170,21 @@ namespace aabb
             Vector const & delta_position
         )
         {
-            assert(delta_position.x != 0);
-            assert(delta_position.y != 0);
+            assert(delta_position.x() != 0);
+            assert(delta_position.y() != 0);
 
-            auto const upwards = (delta_position.x > 0) == (delta_position.y > 0);
+            auto const upwards = (delta_position.x() > 0) == (delta_position.y() > 0);
             auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
             auto const target_point = upwards ? get_bottom_right(obstacle) : get_bottom_left(obstacle);
 
-            if(delta_position.x > 0)
+            if(delta_position.x() > 0)
             {
-                if(target_point.x < start_point.x)
+                if(target_point.x() < start_point.x())
                     return true;
             }
             else
             {
-                if(target_point.x > start_point.x)
+                if(target_point.x() > start_point.x())
                     return true;
             }
 
@@ -189,8 +198,8 @@ namespace aabb
             Box const & obstacle
         )
         {
-            assert(delta_position.x != 0);
-            assert(delta_position.y != 0);
+            assert(delta_position.x() != 0);
+            assert(delta_position.y() != 0);
 
             return is_above_low_diagonal(start, obstacle, delta_position) && is_below_high_diagonal(start, obstacle, delta_position);
         }
@@ -198,10 +207,10 @@ namespace aabb
         template<typename Box, typename Vector>
         constexpr auto get_start_point_for_colliding_edges(Box const & start, Vector const & delta_position)
         {
-            assert(delta_position.x != 0);
-            assert(delta_position.y != 0);
-            auto const upwards = delta_position.y > 0;
-            if(delta_position.x > 0)
+            assert(delta_position.x() != 0);
+            assert(delta_position.y() != 0);
+            auto const upwards = delta_position.y() > 0;
+            if(delta_position.x() > 0)
             {
                 if(upwards)
                     return get_top_right(start);
@@ -219,10 +228,10 @@ namespace aabb
         template<typename Box, typename Vector>
         constexpr auto get_obstacle_point_for_colliding_edges(Box const & obstacle, Vector const & delta_position)
         {
-            assert(delta_position.x != 0);
-            assert(delta_position.y != 0);
-            auto const upwards = delta_position.y > 0;
-            if(delta_position.x > 0)
+            assert(delta_position.x() != 0);
+            assert(delta_position.y() != 0);
+            auto const upwards = delta_position.y() > 0;
+            if(delta_position.x() > 0)
             {
                 if(upwards)
                     return get_bottom_left(obstacle);
@@ -259,7 +268,7 @@ namespace aabb
         if(!does_collide(obstacle, outer_box))
             return false;
 
-        return delta_position.x == 0 || delta_position.y == 0 || detail::is_in_limited_area(start, delta_position, obstacle);
+        return delta_position.x() == 0 || delta_position.y() == 0 || detail::is_in_limited_area(start, delta_position, obstacle);
     }
 
     enum EdgeType
@@ -282,27 +291,27 @@ namespace aabb
         if(!would_collide(start, delta_position, obstacle))
             return EdgeType::NONE;
 
-        if(delta_position.x == 0)
+        if(delta_position.x() == 0)
             return EdgeType::HORIZONTAL;
-        if(delta_position.y == 0)
+        if(delta_position.y() == 0)
             return EdgeType::VERTICAL;
 
         auto const start_point = detail::get_start_point_for_colliding_edges(start, delta_position);
         auto const target_point = detail::get_obstacle_point_for_colliding_edges(obstacle, delta_position);
 
-        if(delta_position.x > 0)
+        if(delta_position.x() > 0)
         {
-            if(target_point.x < start_point.x)
+            if(target_point.x() < start_point.x())
                 return EdgeType::HORIZONTAL;
         }
         else
         {
-            if(target_point.x > start_point.x)
+            if(target_point.x() > start_point.x())
                 return EdgeType::HORIZONTAL;
         }
 
         auto const position = detail::get_position_target_to_delta(start_point, delta_position, target_point);
-        auto const upwards = delta_position.y > 0;
+        auto const upwards = delta_position.y() > 0;
         if(position == detail::Position::BELOW)
             return upwards ? EdgeType::VERTICAL : EdgeType::HORIZONTAL;
         if(position == detail::Position::ABOVE)
