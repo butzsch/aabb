@@ -8,6 +8,8 @@
 This header-only library provides three simple functions for 2D collision detection:
 
 ```c++
+#include <aabb/aabb.hxx>
+
 template<typename Box>
 constexpr bool does_collide(
     Box const & a,
@@ -48,7 +50,7 @@ constexpr EdgeType get_colliding_edges(
 ```
 **get_colliding** can be used to tell with which edges start and obstacle will collide during start's movement by delta_position.
 
-Note that get_colliding_edges asserts that `!does_collide(start, obstacle)` .
+Note that get_colliding_edges asserts that `!does_collide(start, obstacle)`.
 
 ---
 
