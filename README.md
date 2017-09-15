@@ -5,11 +5,11 @@
 
 ## Collision detection for axis-aligned rectangles
 
-This header-only library provides three simple functions for 2D collision detection:
+This library is header-only. To use it simply `#include <aabb/aabb.hxx>`.
+
+aabb provides three simple functions for 2D collision detection:
 
 ```c++
-#include <aabb/aabb.hxx>
-
 template<typename Box>
 constexpr bool does_collide(
     Box const & a,
