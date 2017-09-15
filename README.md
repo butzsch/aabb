@@ -48,7 +48,7 @@ constexpr EdgeType get_colliding_edges(
     Box const & obstacle
 )
 ```
-**get_colliding** can be used to tell with which edges start and obstacle will collide during start's movement by delta_position.
+**get_colliding** can be used to tell with which edges start and obstacle will collide first during start's movement by delta_position.
 
 Note that get_colliding_edges asserts that `!does_collide(start, obstacle)`.
 
