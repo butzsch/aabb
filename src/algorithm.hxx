@@ -1,6 +1,8 @@
 #ifndef AABB_ALGORITHM_HXX_INC
 #define AABB_ALGORITHM_HXX_INC
 
+#include "box_helper.hxx"
+
 namespace aabb
 {
     namespace detail
