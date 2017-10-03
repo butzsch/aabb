@@ -23,7 +23,10 @@ namespace aabb
         template<typename Box, typename Vector>
         constexpr auto get_outer_box(Box const & start, Vector const & delta_position)
         {
-            auto const destination = plus_position(start, delta_position);
+            auto const destination = create_box<Box>(
+                add_vectors<Vector>(get_position(start), delta_position),
+                get_size(start)
+            );
 
             auto const outer_left = std::min(get_left(start), get_left(destination));
             auto const outer_right = std::max(get_right(start), get_right(destination));
@@ -47,7 +50,7 @@ namespace aabb
             Vector const & target_point
         )
         {
-            auto const wanted_delta = detail::subtract_vectors(target_point, start_point);
+            auto const wanted_delta = detail::subtract_vectors<Vector>(target_point, start_point);
 
             auto const a = abs(get_x(wanted_delta)) * get_y(delta_position);
             auto const b = abs(get_x(delta_position)) * get_y(wanted_delta);

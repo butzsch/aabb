@@ -11,27 +11,18 @@ namespace aabb
     namespace detail
     {
         template<typename Box>
+        using vector_t = typename BoxAdapter<std::decay_t<Box>>::vector_t;
+
+        template<typename Box>
         constexpr auto get_position(Box && box)
         {
             return BoxAdapter<std::decay_t<Box>>::get_position(std::forward<Box>(box));
-        }
-
-        template<typename Box, typename Vector>
-        constexpr void set_position(Box & box, Vector && position)
-        {
-            BoxAdapter<std::decay_t<Box>>::set_position(box, std::forward<Vector>(position));
         }
 
         template<typename Box>
         constexpr auto get_size(Box && box)
         {
             return BoxAdapter<std::decay_t<Box>>::get_size(std::forward<Box>(box));
-        }
-
-        template<typename Box, typename Vector>
-        constexpr void set_size(Box & box, Vector && size)
-        {
-            BoxAdapter<std::decay_t<Box>>::set_size(box, std::forward<Vector>(size));
         }
 
         template<typename Vector>
@@ -58,16 +49,16 @@ namespace aabb
             return BoxAdapter<std::decay_t<Box>>::create(std::forward<Vector>(position), std::forward<Vector>(size));
         }
 
-        template<typename Vector>
-        constexpr auto add_vectors(Vector && a, Vector && b)
+        template<typename Vector, typename V1, typename V2>
+        constexpr auto add_vectors(V1 && a, V2 && b)
         {
-            return VectorAdapter<std::decay_t<Vector>>::add(std::forward<Vector>(a), std::forward<Vector>(b));
+            return VectorAdapter<std::decay_t<Vector>>::add(std::forward<V1>(a), std::forward<V2>(b));
         }
 
-        template<typename Vector>
-        constexpr auto subtract_vectors(Vector && a, Vector && b)
+        template<typename Vector, typename V1, typename V2>
+        constexpr auto subtract_vectors(V1 && a, V2 && b)
         {
-            return VectorAdapter<std::decay_t<Vector>>::subtract(std::forward<Vector>(a), std::forward<Vector>(b));
+            return VectorAdapter<std::decay_t<Vector>>::subtract(std::forward<V1>(a), std::forward<V2>(b));
         }
     }
 }

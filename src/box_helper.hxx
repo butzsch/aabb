@@ -88,7 +88,7 @@ namespace aabb
         template<typename Box>
         constexpr auto get_top_left(Box const & box)
         {
-            return create_vector<BoxAdapter<Box>::vector_t>(
+            return create_vector<vector_t<Box>>(
                 get_left(box),
                 get_top(box)
             );
@@ -97,7 +97,7 @@ namespace aabb
         template<typename Box>
         constexpr auto get_top_right(Box const & box)
         {
-            return create_vector<BoxAdapter<Box>::vector_t>(
+            return create_vector<vector_t<Box>>(
                 get_right(box),
                 get_top(box)
             );
@@ -106,7 +106,7 @@ namespace aabb
         template<typename Box>
         constexpr auto get_bottom_left(Box const & box)
         {
-            return create_vector<BoxAdapter<Box>::vector_t>(
+            return create_vector<vector_t<Box>>(
                 get_left(box),
                 get_bottom(box)
             );
@@ -115,7 +115,7 @@ namespace aabb
         template<typename Box>
         constexpr auto get_bottom_right(Box const & box)
         {
-            return create_vector<BoxAdapter<Box>::vector_t>(
+            return create_vector<vector_t<Box>>(
                 get_right(box),
                 get_bottom(box)
             );
@@ -128,8 +128,8 @@ namespace aabb
             assert(bottom < top);
 
             return create_box<Box>(
-                create_vector<BoxAdapter<Box>::vector_t>(left, bottom),
-                create_vector<BoxAdapter<Box>::vector_t>(right - left, top - bottom)
+                create_vector<vector_t<Box>>(left, bottom),
+                create_vector<vector_t<Box>>(right - left, top - bottom)
             );
         }
 
