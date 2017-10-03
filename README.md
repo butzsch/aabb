@@ -74,6 +74,7 @@ To use this library with your own vector and box types simply specialize `templa
     
     namespace aabb
     {
+        template<>
         struct VectorAdapter<Vector>
         {
             static Vector create(int const x, int const y)
@@ -102,6 +103,7 @@ To use this library with your own vector and box types simply specialize `templa
             }
         };
 
+        template<>
         struct BoxAdapter<Box>
         {
             using vector_t = Vector;
