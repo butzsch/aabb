@@ -1,7 +1,11 @@
 #ifndef AABB_AABB_TESTING_HXX_INC
 #define AABB_AABB_TESTING_HXX_INC
 
+#include <utility>
+
 #include <gtest/gtest.h>
+
+#include <aabb/aabb.hxx>
 
 namespace aabb_testing
 {
@@ -10,41 +14,22 @@ namespace aabb_testing
     template<typename T>
     struct Vector
     {
-    public:
-        constexpr Vector(T const x, T const y)
-            : x_ {x}
-            , y_ {y}
-        {}
+        T x;
+        T y;
+    };
 
-        constexpr auto & x()
-        {
-            return x_;
-        }
-
-        constexpr auto const & x() const
-        {
-            return x_;
-        }
-
-        constexpr auto & y()
-        {
-            return y_;
-        }
-
-        constexpr auto const & y() const
-        {
-            return y_;
-        }
-
-    private:
-        T x_;
-        T y_;
+    template<typename T>
+    struct Box
+    {
+        Vector<T> position;
+        Vector<T> size;
     };
 
     template<typename T>
     constexpr bool operator == (Vector<T> const & a, Vector<T> const & b)
     {
-        return a.x() == b.x() && a.y() == b.y();
+        return a.x == b.x
+            && a.y == b.y;
     }
 
     template<typename T>
@@ -56,8 +41,8 @@ namespace aabb_testing
     template<typename T>
     constexpr Vector<T> & operator += (Vector<T> & a, Vector<T> const & b)
     {
-        a.x() = a.x() + b.x();
-        a.y() = a.y() + b.y();
+        a.x += b.x;
+        a.y += b.y;
 
         return a;
     }
@@ -71,8 +56,8 @@ namespace aabb_testing
     template<typename T>
     constexpr Vector<T> & operator -= (Vector<T> & a, Vector<T> const & b)
     {
-        a.x() = a.x() - b.x();
-        a.y() = a.y() - b.y();
+        a.x -= b.x;
+        a.y -= b.y;
 
         return a;
     }
@@ -86,8 +71,8 @@ namespace aabb_testing
     template<typename T>
     constexpr Vector<T> & operator *= (Vector<T> & a, T const b)
     {
-        a.x() = a.x() * b;
-        a.y() = a.y() * b;
+        a.x *= b;
+        a.y *= b;
 
         return a;
     }
@@ -101,8 +86,8 @@ namespace aabb_testing
     template<typename T>
     constexpr Vector<T> & operator /= (Vector<T> & a, T const b)
     {
-        a.x() = a.x() / b;
-        a.y() = a.y() / b;
+        a.x /= b;
+        a.y /= b;
 
         return a;
     }
@@ -112,44 +97,68 @@ namespace aabb_testing
     {
         return a /= b;
     }
-    
+}
+
+namespace aabb
+{
     template<typename T>
-    class Box
+    struct VectorAdapter<aabb_testing::Vector<T>>
     {
-    public:
-        constexpr Box(Vector<T> const & position, Vector<T> const & size)
-            : position_ {position}
-            , size_ {size}
-        {}
-
-        constexpr Box(T const x, T const y, T const width, T const height)
-            : position_ {x, y}
-            , size_ {width, height}
-        {}
-
-        constexpr auto & position()
+        static constexpr aabb_testing::Vector<T> create(T const x, T const y)
         {
-            return position_;
+            return {x, y};
         }
 
-        constexpr auto const & position() const
+        static constexpr T get_x(aabb_testing::Vector<T> const & vector)
         {
-            return position_;
+            return vector.x;
         }
 
-        constexpr auto & size()
+        static constexpr T get_y(aabb_testing::Vector<T> const & vector)
         {
-            return size_;
+            return vector.y;
         }
 
-        constexpr auto const & size() const
+        static constexpr aabb_testing::Vector<T> add(aabb_testing::Vector<T> const & a, aabb_testing::Vector<T> const & b)
         {
-            return size_;
+            return {a.x + b.x, a.y + b.y};
         }
 
-    private:
-        Vector<T> position_;
-        Vector<T> size_;
+        static constexpr aabb_testing::Vector<T> subtract(aabb_testing::Vector<T> const & a, aabb_testing::Vector<T> const & b)
+        {
+            return {a.x - b.x, a.y - b.y};
+        }
+    };
+
+    template<typename T>
+    struct BoxAdapter<aabb_testing::Box<T>>
+    {
+        using vector_t = aabb_testing::Vector<T>;
+
+        static constexpr aabb_testing::Box<T> create(vector_t && position, vector_t && size)
+        {
+            return {std::forward<vector_t>(position), std::forward<vector_t>(size)};
+        }
+
+        static constexpr vector_t get_position(aabb_testing::Box<T> const & box)
+        {
+            return box.position;
+        }
+
+        static constexpr void set_position(aabb_testing::Box<T> & box, vector_t const & position)
+        {
+            box.position = position;
+        }
+
+        static constexpr vector_t get_size(aabb_testing::Box<T> const & box)
+        {
+            return box.size;
+        }
+
+        static constexpr void set_size(aabb_testing::Box<T> & box, vector_t const & size)
+        {
+            box.size = size;
+        }
     };
 }
 

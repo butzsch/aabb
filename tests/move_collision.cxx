@@ -21,8 +21,8 @@ TYPED_TEST_P(MoveCollisionFunction, ReturnsThatIdenticalDestinationAndObstacleCo
     static auto constexpr start = Box<TypeParam> {0, 0, 1, 1 };
     static auto constexpr delta_position = Vector<TypeParam> {2, 2};
     static auto constexpr obstacle = Box<TypeParam> {
-        start.position() + delta_position,
-        start.size()
+        start.position + delta_position,
+        start.size
     };
 
     ASSERT_TRUE(would_collide(start, delta_position, obstacle));
@@ -34,16 +34,16 @@ TYPED_TEST_P(MoveCollisionFunction, ReturnsThatObstaclesOutsideTopRightOuterBoun
     static auto constexpr start = Box<TypeParam> {Vector<TypeParam> { 0, 0 }, size};
     static auto constexpr delta_position = Vector<TypeParam> {2, 2};
 
-    static auto constexpr far_away_obstacle = Box<TypeParam> {start.position() + delta_position + Vector<TypeParam> { 5, 5 }, size};
+    static auto constexpr far_away_obstacle = Box<TypeParam> {start.position + delta_position + Vector<TypeParam> { 5, 5 }, size};
     ASSERT_FALSE(would_collide(start, delta_position, far_away_obstacle));
 
-    static auto constexpr touching_destination_obstacle = Box<TypeParam> {start.position() + delta_position + size, size};
+    static auto constexpr touching_destination_obstacle = Box<TypeParam> {start.position + delta_position + size, size};
     ASSERT_FALSE(would_collide(start, delta_position, touching_destination_obstacle));
 
-    static auto constexpr behind_start_obstacle = Box<TypeParam> {start.position() - size, size};
+    static auto constexpr behind_start_obstacle = Box<TypeParam> {start.position - size, size};
     ASSERT_FALSE(would_collide(start, delta_position, behind_start_obstacle));
 
-    static auto constexpr top_left_obstacle = Box<TypeParam> {start.position() - size + Vector<TypeParam> { 0, delta_position.y() }, size};
+    static auto constexpr top_left_obstacle = Box<TypeParam> {start.position - size + Vector<TypeParam> { 0, delta_position.y }, size};
     ASSERT_FALSE(would_collide(start, delta_position, top_left_obstacle));
 }
 

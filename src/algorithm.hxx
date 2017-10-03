@@ -1,6 +1,7 @@
 #ifndef AABB_ALGORITHM_HXX_INC
 #define AABB_ALGORITHM_HXX_INC
 
+#include "adapter_helper.hxx"
 #include "box_helper.hxx"
 
 namespace aabb
@@ -46,10 +47,10 @@ namespace aabb
             Vector const & target_point
         )
         {
-            auto const wanted_delta = target_point - start_point;
+            auto const wanted_delta = detail::subtract_vectors(target_point, start_point);
 
-            auto const a = abs(wanted_delta.x()) * delta_position.y();
-            auto const b = wanted_delta.y() * abs(delta_position.x());
+            auto const a = abs(get_x(wanted_delta)) * get_y(delta_position);
+            auto const b = abs(get_x(delta_position)) * get_y(wanted_delta);
 
             if(a > b)
                 return Position::BELOW;
@@ -64,21 +65,26 @@ namespace aabb
             Vector const & delta_position
         )
         {
-            assert(delta_position.x() != 0);
-            assert(delta_position.y() != 0);
+            auto const delta_x = get_x(delta_position);
+            assert(delta_x != 0);
 
-            auto const upwards = (delta_position.x() > 0) == (delta_position.y() > 0);
+            auto const delta_y = get_y(delta_position);
+            assert(delta_y != 0);
+
+            auto const upwards = (delta_x > 0) == (delta_y > 0);
             auto const start_point = upwards ? get_bottom_right(start) : get_bottom_left(start);
             auto const target_point = upwards ? get_top_left(obstacle) : get_top_right(obstacle);
 
-            if(delta_position.x() > 0)
+            auto const target_x = get_x(target_point);
+            auto const start_x = get_x(start_point);
+            if(delta_x > 0)
             {
-                if(target_point.x() < start_point.x())
+                if(target_x < start_x)
                     return true;
             }
             else
             {
-                if(target_point.x() > start_point.x())
+                if(target_x > start_x)
                     return true;
             }
 
@@ -92,21 +98,26 @@ namespace aabb
             Vector const & delta_position
         )
         {
-            assert(delta_position.x() != 0);
-            assert(delta_position.y() != 0);
+            auto const delta_x = get_x(delta_position);
+            assert(delta_x != 0);
 
-            auto const upwards = (delta_position.x() > 0) == (delta_position.y() > 0);
+            auto const delta_y = get_y(delta_position);
+            assert(delta_y != 0);
+
+            auto const upwards = (delta_x > 0) == (delta_y > 0);
             auto const start_point = upwards ? get_top_left(start) : get_top_right(start);
             auto const target_point = upwards ? get_bottom_right(obstacle) : get_bottom_left(obstacle);
 
-            if(delta_position.x() > 0)
+            auto const target_x = get_x(target_point);
+            auto const start_x = get_x(start_point);
+            if(delta_x > 0)
             {
-                if(target_point.x() < start_point.x())
+                if(target_x < start_x)
                     return true;
             }
             else
             {
-                if(target_point.x() > start_point.x())
+                if(target_x > start_x)
                     return true;
             }
 
@@ -120,8 +131,8 @@ namespace aabb
             Box const & obstacle
         )
         {
-            assert(delta_position.x() != 0);
-            assert(delta_position.y() != 0);
+            assert(get_x(delta_position) != 0);
+            assert(get_y(delta_position) != 0);
 
             return is_above_low_diagonal(start, obstacle, delta_position) && is_below_high_diagonal(start, obstacle, delta_position);
         }
@@ -129,10 +140,11 @@ namespace aabb
         template<typename Box, typename Vector>
         constexpr auto get_start_point_for_colliding_edges(Box const & start, Vector const & delta_position)
         {
-            assert(delta_position.x() != 0);
-            assert(delta_position.y() != 0);
-            auto const upwards = delta_position.y() > 0;
-            if(delta_position.x() > 0)
+            assert(get_x(delta_position) != 0);
+            assert(get_y(delta_position) != 0);
+
+            auto const upwards = get_y(delta_position) > 0;
+            if(get_x(delta_position) > 0)
             {
                 if(upwards)
                     return get_top_right(start);
@@ -150,10 +162,11 @@ namespace aabb
         template<typename Box, typename Vector>
         constexpr auto get_obstacle_point_for_colliding_edges(Box const & obstacle, Vector const & delta_position)
         {
-            assert(delta_position.x() != 0);
-            assert(delta_position.y() != 0);
-            auto const upwards = delta_position.y() > 0;
-            if(delta_position.x() > 0)
+            assert(get_x(delta_position) != 0);
+            assert(get_y(delta_position) != 0);
+
+            auto const upwards = get_y(delta_position) > 0;
+            if(get_x(delta_position) > 0)
             {
                 if(upwards)
                     return get_bottom_left(obstacle);
