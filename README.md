@@ -54,4 +54,72 @@ Note that get_colliding_edges asserts that `!does_collide(start, obstacle)`.
 
 ---
 
-Any class that provides a member function `T x()` and a member function `T y()` can be used as a Vector. Similarly, any class with member functions `Vector position()` and `Vector size()` can be used as a Box.
+This library uses the concept of vectors and boxes in its interface. A vector descripes a point or directed size in a two-dimensional coordinate system. A box is a 2D rectangular area represented by a point and a size.
+To use this library with your own vector and box types simply specialize `template<typename Vector> struct VectorAdapter` and `template<typename Box> struct BoxAdapter` in the namespace `aabb`. The following code example shows which functions and typedefs your specialized template structs have to provide:
+
+```c++
+    #include <aabb/adapter.hxx>
+
+    struct Vector
+    {
+        int x;
+        int y;
+    };
+
+    struct Box
+    {
+        Vector position;
+        Vector size;
+    };
+    
+    namespace aabb
+    {
+        struct VectorAdapter<Vector>
+        {
+            static Vector create(int const x, int const y)
+            {
+                return Vector {x, y};
+            }
+
+            static int get_x(Vector const & vector)
+            {
+                return vector.x;
+            }
+
+            static int get_y(Vector const & vector)
+            {
+                return vector.y;
+            }
+
+            static Vector add(Vector const & a, Vector const & b)
+            {
+                return Vector {a.x + b.x, a.y + b.y};
+            }
+
+            static Vector subtract(Vector const & a, Vector const & b)
+            {
+                return Vector {a.x - b.x, a.y - b.y};
+            }
+        };
+
+        struct BoxAdapter<Box>
+        {
+            using vector_t = Vector;
+
+            static Box create(Vector const & position, Vector const & size)
+            {
+                return Box {position, size};
+            }
+
+            static Vector get_position(Box const & box)
+            {
+                return box.position;
+            }
+
+            static Vector get_size(Box const & box)
+            {
+                return box.size;
+            }
+        };
+    }
+```
