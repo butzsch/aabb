@@ -18,7 +18,10 @@ TYPED_TEST_CASE_P(MoveCollisionFunction);
 
 TYPED_TEST_P(MoveCollisionFunction, ReturnsThatIdenticalDestinationAndObstacleCollide)
 {
-    static auto constexpr start = Box<TypeParam> {0, 0, 1, 1 };
+    static auto constexpr start = Box<TypeParam> {
+        Vector<TypeParam> {0, 0},
+        Vector<TypeParam> {1, 1}
+    };
     static auto constexpr delta_position = Vector<TypeParam> {2, 2};
     static auto constexpr obstacle = Box<TypeParam> {
         start.position + delta_position,
