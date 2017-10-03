@@ -1,4 +1,4 @@
-#include <vector>
+#include <array>
 
 #include <gtest/gtest.h>
 
@@ -7,6 +7,15 @@
 
 using namespace aabb;
 using namespace aabb_testing;
+
+namespace
+{
+    template<typename T, typename ... Args>
+    constexpr auto make_array(Args && ... args)
+    {
+        return std::array<T, sizeof ... (Args)> {std::forward<Args>(args) ...};
+    }
+}
 
 template<typename T>
 class MoveCollisionFunction
@@ -164,12 +173,12 @@ TYPED_TEST_P(MoveCollisionFunction, ReturnsThatOverlappingStartAndObstacleCollid
     static auto constexpr size = Vector<TypeParam> {1, 1};
     static auto constexpr start = Box<TypeParam> {Vector<TypeParam> { 0, 0 }, size};
 
-    auto const delta_positions = std::vector<Vector<TypeParam>> {
+    static auto constexpr delta_positions = make_array<Vector<TypeParam>>(
         Vector<TypeParam> { 1, 1 },
         Vector<TypeParam> { 1, -1 },
         Vector<TypeParam> { -1, -1 },
         Vector<TypeParam> { -1, 1 }
-    };
+    );
 
     for(auto const & delta_position : delta_positions)
     {
