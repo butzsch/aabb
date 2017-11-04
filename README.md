@@ -48,13 +48,13 @@ constexpr EdgeType get_colliding_edges(
     Box const & obstacle
 )
 ```
-**get_colliding** can be used to tell with which edges start and obstacle will collide first during start's movement by delta_position.
+**get_colliding_edges** can be used to tell with which edges start and obstacle will collide first during start's movement by delta_position.
 
 Note that get_colliding_edges asserts that `!does_collide(start, obstacle)`.
 
 ---
 
-This library uses the concept of vectors and boxes in its interface. A vector descripes a point or directed size in a two-dimensional coordinate system. A box is a 2D rectangular area represented by a point and a size.
+This library uses the concept of vectors and boxes in its interface. A vector descripes a point or directed size in a two-dimensional coordinate system. A box is a 2D rectangular area represented by a position vector and a size vector.
 To use this library with your own vector and box types simply specialize `template<typename Vector> struct VectorAdapter` and `template<typename Box> struct BoxAdapter` in the namespace `aabb`. The following code example shows which functions and typedefs your specialized template structs have to provide:
 
 ```c++
